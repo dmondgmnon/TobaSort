@@ -103,5 +103,11 @@ namespace TobaSort.Views
             FormRiwayatPetani form_riwayat = new FormRiwayatPetani(akun_aktif);
             form_riwayat.ShowDialog();
         }
+
+        private void btnKelolaHarga_Click(object sender, EventArgs e)
+        {
+            FormKelolaHarga form_harga = new FormKelolaHarga(akun_aktif);
+            form_harga.ShowDialog();
+        }
     }
 }

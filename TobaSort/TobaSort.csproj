@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AkunController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\GradeController.cs" />
     <Compile Include="Controllers\GudangController.cs" />
     <Compile Include="Controllers\PetaniController.cs" />
     <Compile Include="Controllers\TransaksiController.cs" />
@@ -97,6 +98,12 @@
     </Compile>
     <Compile Include="Views\FormDashboard.Designer.cs">
       <DependentUpon>FormDashboard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormKelolaHarga.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormKelolaHarga.Designer.cs">
+      <DependentUpon>FormKelolaHarga.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\FormLaporanTransaksi.cs">
       <SubType>Form</SubType>
@@ -151,6 +158,9 @@
     </Compile>
     <EmbeddedResource Include="Views\FormDashboard.resx">
       <DependentUpon>FormDashboard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\FormKelolaHarga.resx">
+      <DependentUpon>FormKelolaHarga.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FormLaporanTransaksi.resx">
       <DependentUpon>FormLaporanTransaksi.cs</DependentUpon>

@@ -17,7 +17,7 @@ namespace TobaSort.Views
             trx_controller = new TransaksiController();
             this.akun_petani = akun_login;
 
-            // Panggil data langsung menggunakan nama lengkap dari akun
+            // Memuat riwayat transaksi berdasarkan id_akun petani
             muat_riwayat();
         }
 
@@ -25,7 +25,8 @@ namespace TobaSort.Views
         {
             try
             {
-                dgvRiwayat.DataSource = trx_controller.tampil_riwayat_petani(akun_petani.nama_lengkap);
+                // UPDATE: Mengirimkan akun_petani.id (int) sesuai dengan TransaksiController yang baru
+                dgvRiwayat.DataSource = trx_controller.tampil_riwayat_petani(akun_petani.id);
 
                 if (dgvRiwayat.Columns.Contains("Total Uang (Rp)"))
                 {

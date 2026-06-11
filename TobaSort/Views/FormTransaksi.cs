@@ -29,8 +29,10 @@ namespace TobaSort.Views
             {
                 var dtPetani = petani_controller.tampil_semua_petani();
                 cmbPetani.DataSource = dtPetani;
-                cmbPetani.DisplayMember = "nama_petani"; // Teks yang dilihat petugas
-                cmbPetani.ValueMember = "id_petani";     // Nilai ID yang disimpan ke database
+
+                // PERBAIKAN: Sesuaikan dengan alias baru di PetaniController
+                cmbPetani.DisplayMember = "Nama Petani";
+                cmbPetani.ValueMember = "id_petani";
             }
             catch (Exception ex)
             {

@@ -137,8 +137,8 @@ namespace TobaSort.Controllers
             return dt;
         }
 
-        // --- 3. Fungsi Menampilkan Riwayat Khusus 1 Petani ---
-        public DataTable tampil_riwayat_petani(string nama_petani)
+        // --- 3. Fungsi Menampilkan Riwayat Khusus 1 Petani (DI-UPDATE: Menggunakan id_akun) ---
+        public DataTable tampil_riwayat_petani(int id_akun_login)
         {
             DataTable dt = new DataTable();
             try
@@ -146,7 +146,7 @@ namespace TobaSort.Controllers
                 using (NpgsqlConnection conn = DatabaseHelper.GetConnection())
                 {
                     conn.Open();
-                    // Query ini memfilter data HANYA untuk petani yang namanya sesuai dengan yang sedang login
+                    // Query ini difilter berdasarkan id_akun yang terhubung, bukan lagi mencocokkan string nama
                     string query = @"
                         SELECT 
                             t.id_transaksi AS ""ID Transaksi"", 
@@ -160,14 +160,14 @@ namespace TobaSort.Controllers
                         JOIN 
                             tb_petani p ON t.id_petani = p.id_petani
                         WHERE 
-                            p.nama_petani = @nama
+                            p.id_akun = @id_akun
                         ORDER BY 
                             t.id_transaksi DESC";
 
                     using (NpgsqlCommand cmd = new NpgsqlCommand(query, conn))
                     {
-                        // Memasukkan parameter nama untuk keamanan
-                        cmd.Parameters.AddWithValue("@nama", nama_petani);
+                        // Memasukkan parameter ID Akun untuk keamanan dan akurasi
+                        cmd.Parameters.AddWithValue("@id_akun", id_akun_login);
 
                         using (NpgsqlDataAdapter da = new NpgsqlDataAdapter(cmd))
                         {

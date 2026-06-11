@@ -7,7 +7,7 @@ namespace TobaSort.Views
     public partial class FormPetani : Form
     {
         private PetaniController petani_controller;
-        private int id_petani_terpilih = 0; // Untuk menyimpan ID saat mengklik tabel
+        private int id_petani_terpilih = 0;
 
         public FormPetani()
         {
@@ -16,12 +16,14 @@ namespace TobaSort.Views
             muat_data_tabel();
         }
 
-        // 1. Fungsi memuat data ke DataGridView
         private void muat_data_tabel()
         {
             try
             {
                 dgvPetani.DataSource = petani_controller.tampil_semua_petani();
+
+                if (dgvPetani.Columns.Contains("id_petani"))
+                    dgvPetani.Columns["id_petani"].Visible = false;
             }
             catch (Exception ex)
             {
@@ -29,52 +31,57 @@ namespace TobaSort.Views
             }
         }
 
-        // 2. Fungsi untuk membersihkan kotak input
         private void bersihkan_form()
         {
             txtNama.Clear();
             txtAlamat.Clear();
             txtNoTelp.Clear();
-            id_petani_terpilih = 0; // Reset ID terpilih
+            txtUsername.Clear();
+            txtPassword.Clear();
+            chkAktif.Checked = true;
+            id_petani_terpilih = 0;
         }
 
-        // 3. Tombol Tambah Baru (Simpan)
         private void btnSimpan_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtNama.Text))
+            if (string.IsNullOrWhiteSpace(txtNama.Text) || string.IsNullOrWhiteSpace(txtUsername.Text) || string.IsNullOrWhiteSpace(txtPassword.Text))
             {
-                MessageBox.Show("Nama Petani tidak boleh kosong!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Nama Petani, Username, dan Password wajib diisi!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            bool sukses = petani_controller.tambah_petani(txtNama.Text, txtAlamat.Text, txtNoTelp.Text);
-            if (sukses)
+            try
             {
-                MessageBox.Show("Data petani berhasil ditambahkan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                bersihkan_form();
-                muat_data_tabel(); // Refresh tabel
+                bool sukses = petani_controller.tambah_petani(txtNama.Text, txtAlamat.Text, txtNoTelp.Text, txtUsername.Text, txtPassword.Text);
+                if (sukses)
+                {
+                    MessageBox.Show("Data profil dan akun login petani berhasil ditambahkan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    bersihkan_form();
+                    muat_data_tabel();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // 4. Memilih Data dari Tabel saat diklik (Untuk Edit/Hapus)
         private void dgvPetani_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Pastikan baris yang diklik valid (bukan header)
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dgvPetani.Rows[e.RowIndex];
-
-                // Ambil ID dari kolom pertama (index 0)
                 id_petani_terpilih = Convert.ToInt32(row.Cells["id_petani"].Value);
 
-                // Isi kotak input dengan data dari tabel
-                txtNama.Text = row.Cells["nama_petani"].Value.ToString();
-                txtAlamat.Text = row.Cells["alamat"].Value.ToString();
-                txtNoTelp.Text = row.Cells["no_telepon"].Value.ToString();
+                txtNama.Text = row.Cells["Nama Petani"].Value.ToString();
+                txtAlamat.Text = row.Cells["Alamat"].Value.ToString();
+                txtNoTelp.Text = row.Cells["No. Telepon"].Value.ToString();
+                txtUsername.Text = row.Cells["Username"].Value.ToString();
+                txtPassword.Text = row.Cells["Password"].Value.ToString();
+                chkAktif.Checked = Convert.ToBoolean(row.Cells["Status Aktif"].Value);
             }
         }
 
-        // 5. Tombol Simpan Editan
         private void btnEdit_Click(object sender, EventArgs e)
         {
             if (id_petani_terpilih == 0)
@@ -83,16 +90,26 @@ namespace TobaSort.Views
                 return;
             }
 
-            bool sukses = petani_controller.edit_petani(id_petani_terpilih, txtNama.Text, txtAlamat.Text, txtNoTelp.Text, true);
-            if (sukses)
+            try
             {
-                MessageBox.Show("Data petani berhasil diubah!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                bersihkan_form();
-                muat_data_tabel();
+                bool sukses = petani_controller.edit_petani(
+                    id_petani_terpilih, txtNama.Text, txtAlamat.Text, txtNoTelp.Text,
+                    txtUsername.Text, txtPassword.Text, chkAktif.Checked
+                );
+
+                if (sukses)
+                {
+                    MessageBox.Show("Data profil dan akun petani berhasil diubah!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    bersihkan_form();
+                    muat_data_tabel();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // 6. Tombol Nonaktifkan (Hapus)
         private void btnHapus_Click(object sender, EventArgs e)
         {
             if (id_petani_terpilih == 0)
@@ -101,20 +118,26 @@ namespace TobaSort.Views
                 return;
             }
 
-            DialogResult dialog = MessageBox.Show("Apakah Anda yakin ingin menonaktifkan petani ini?", "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult dialog = MessageBox.Show("Apakah Anda yakin ingin menonaktifkan hak akses login petani ini?", "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialog == DialogResult.Yes)
             {
-                bool sukses = petani_controller.nonaktifkan_petani(id_petani_terpilih);
-                if (sukses)
+                try
                 {
-                    MessageBox.Show("Petani berhasil dinonaktifkan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    bersihkan_form();
-                    muat_data_tabel();
+                    bool sukses = petani_controller.nonaktifkan_petani(id_petani_terpilih);
+                    if (sukses)
+                    {
+                        MessageBox.Show("Akses login petani berhasil dinonaktifkan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        bersihkan_form();
+                        muat_data_tabel();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
-        // 7. Tombol Clear
         private void btnClear_Click(object sender, EventArgs e)
         {
             bersihkan_form();
@@ -122,7 +145,6 @@ namespace TobaSort.Views
 
         private void txtNama_TextChanged(object sender, EventArgs e)
         {
-            // No action needed
         }
     }
 }

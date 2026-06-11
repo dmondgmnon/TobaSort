@@ -17,14 +17,15 @@ namespace TobaSort.Views
             muat_data_akun();
         }
 
-        // 1. Mengisi Pilihan Role di ComboBox (SUDAH DIPERBAIKI SESUAI DATABASE)
+        // 1. Mengisi Pilihan Role di ComboBox (HANYA UNTUK INTERNAL)
         private void siapkan_dropdown()
         {
             cmbRole.Items.Clear();
-            cmbRole.Items.AddRange(new string[] { "Manajer", "Petugas", "Petani" });
+            // Hanya ada Manajer dan Petugas (Petani dikelola di FormPetani)
+            cmbRole.Items.AddRange(new string[] { "Manajer", "Petugas" });
         }
 
-        // 2. Fungsi Menampilkan Daftar Akun ke DataGridView
+        // 2. Fungsi Menampilkan Daftar Akun ke DataGridView (DIFILTER)
         private void muat_data_akun()
         {
             try
@@ -32,7 +33,8 @@ namespace TobaSort.Views
                 using (NpgsqlConnection conn = DatabaseHelper.GetConnection())
                 {
                     conn.Open();
-                    string query = "SELECT id_akun, nama_lengkap AS \"Nama\", username AS \"Username\", role AS \"Role\", is_aktif AS \"Status Aktif\" FROM tb_akun ORDER BY id_akun DESC";
+                    // Query difilter menggunakan WHERE role IN ('Manajer', 'Petugas')
+                    string query = "SELECT id_akun, nama_lengkap AS \"Nama\", username AS \"Username\", role AS \"Role\", is_aktif AS \"Status Aktif\" FROM tb_akun WHERE role IN ('Manajer', 'Petugas') ORDER BY id_akun DESC";
                     using (NpgsqlDataAdapter da = new NpgsqlDataAdapter(query, conn))
                     {
                         DataTable dt = new DataTable();
