@@ -35,6 +35,8 @@
             this.btnMenuPetani = new System.Windows.Forms.Button();
             this.btnLogout = new System.Windows.Forms.Button();
             this.btnKelolaPetani = new System.Windows.Forms.Button();
+            this.btnLaporan = new System.Windows.Forms.Button();
+            this.btnStokGudang = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblInfoUser
@@ -83,6 +85,7 @@
             this.btnMenuPetani.TabIndex = 4;
             this.btnMenuPetani.Text = "Riwayat Setoran";
             this.btnMenuPetani.UseVisualStyleBackColor = true;
+            this.btnMenuPetani.Click += new System.EventHandler(this.btnMenuPetani_Click);
             // 
             // btnLogout
             // 
@@ -104,11 +107,35 @@
             this.btnKelolaPetani.UseVisualStyleBackColor = true;
             this.btnKelolaPetani.Click += new System.EventHandler(this.btnKelolaPetani_Click);
             // 
+            // btnLaporan
+            // 
+            this.btnLaporan.AutoSize = true;
+            this.btnLaporan.Location = new System.Drawing.Point(424, 344);
+            this.btnLaporan.Name = "btnLaporan";
+            this.btnLaporan.Size = new System.Drawing.Size(161, 39);
+            this.btnLaporan.TabIndex = 7;
+            this.btnLaporan.Text = "Lihat Laporan Transaksi";
+            this.btnLaporan.UseVisualStyleBackColor = true;
+            this.btnLaporan.Click += new System.EventHandler(this.btnLaporan_Click);
+            // 
+            // btnStokGudang
+            // 
+            this.btnStokGudang.AutoSize = true;
+            this.btnStokGudang.Location = new System.Drawing.Point(207, 344);
+            this.btnStokGudang.Name = "btnStokGudang";
+            this.btnStokGudang.Size = new System.Drawing.Size(161, 39);
+            this.btnStokGudang.TabIndex = 8;
+            this.btnStokGudang.Text = "Laporan StokGudang";
+            this.btnStokGudang.UseVisualStyleBackColor = true;
+            this.btnStokGudang.Click += new System.EventHandler(this.btnStokGudang_Click);
+            // 
             // FormDashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnStokGudang);
+            this.Controls.Add(this.btnLaporan);
             this.Controls.Add(this.btnKelolaPetani);
             this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.btnMenuPetani);
@@ -132,5 +159,7 @@
         private System.Windows.Forms.Button btnMenuPetani;
         private System.Windows.Forms.Button btnLogout;
         private System.Windows.Forms.Button btnKelolaPetani;
+        private System.Windows.Forms.Button btnLaporan;
+        private System.Windows.Forms.Button btnStokGudang;
     }
 }

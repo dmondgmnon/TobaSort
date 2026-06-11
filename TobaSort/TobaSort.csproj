@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AkunController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\GudangController.cs" />
     <Compile Include="Controllers\PetaniController.cs" />
     <Compile Include="Controllers\TransaksiController.cs" />
     <Compile Include="Data\DatabaseHelper.cs" />
@@ -96,6 +97,12 @@
     </Compile>
     <Compile Include="Views\FormDashboard.Designer.cs">
       <DependentUpon>FormDashboard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormLaporanTransaksi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormLaporanTransaksi.Designer.cs">
+      <DependentUpon>FormLaporanTransaksi.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\FormLogin.cs">
       <SubType>Form</SubType>
@@ -115,6 +122,18 @@
     <Compile Include="Views\FormPetani.Designer.cs">
       <DependentUpon>FormPetani.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\FormRiwayatPetani.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormRiwayatPetani.Designer.cs">
+      <DependentUpon>FormRiwayatPetani.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormStokGudangcs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormStokGudangcs.Designer.cs">
+      <DependentUpon>FormStokGudangcs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\FormTransaksi.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -133,6 +152,9 @@
     <EmbeddedResource Include="Views\FormDashboard.resx">
       <DependentUpon>FormDashboard.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\FormLaporanTransaksi.resx">
+      <DependentUpon>FormLaporanTransaksi.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\FormLogin.resx">
       <DependentUpon>FormLogin.cs</DependentUpon>
     </EmbeddedResource>
@@ -141,6 +163,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FormPetani.resx">
       <DependentUpon>FormPetani.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\FormRiwayatPetani.resx">
+      <DependentUpon>FormRiwayatPetani.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\FormStokGudangcs.resx">
+      <DependentUpon>FormStokGudangcs.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FormTransaksi.resx">
       <DependentUpon>FormTransaksi.cs</DependentUpon>

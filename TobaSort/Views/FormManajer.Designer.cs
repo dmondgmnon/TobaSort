@@ -45,13 +45,17 @@
             // 
             // dgvAkun
             // 
+            this.dgvAkun.AllowUserToAddRows = false;
+            this.dgvAkun.AllowUserToDeleteRows = false;
             this.dgvAkun.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvAkun.Location = new System.Drawing.Point(28, 12);
             this.dgvAkun.Name = "dgvAkun";
+            this.dgvAkun.ReadOnly = true;
             this.dgvAkun.RowHeadersWidth = 51;
             this.dgvAkun.RowTemplate.Height = 24;
-            this.dgvAkun.Size = new System.Drawing.Size(544, 150);
+            this.dgvAkun.Size = new System.Drawing.Size(747, 150);
             this.dgvAkun.TabIndex = 0;
+            this.dgvAkun.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAkun_CellClick);
             // 
             // txtNama
             // 
@@ -93,6 +97,7 @@
             this.btnSimpan.TabIndex = 5;
             this.btnSimpan.Text = "simpan";
             this.btnSimpan.UseVisualStyleBackColor = true;
+            this.btnSimpan.Click += new System.EventHandler(this.btnSimpan_Click);
             // 
             // btnHapus
             // 
@@ -102,6 +107,7 @@
             this.btnHapus.TabIndex = 6;
             this.btnHapus.Text = "hapus";
             this.btnHapus.UseVisualStyleBackColor = true;
+            this.btnHapus.Click += new System.EventHandler(this.btnHapus_Click);
             // 
             // btnRefresh
             // 

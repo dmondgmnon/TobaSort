@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data; // WAJIB DITAMBAHKAN UNTUK DATATABLE
 using Npgsql;
 using TobaSort.Data;
 
@@ -6,7 +7,7 @@ namespace TobaSort.Controllers
 {
     public class TransaksiController
     {
-        // Fungsi ini menggunakan NpgsqlTransaction untuk memastikan keamanan data
+        // 1. Fungsi Menyimpan Transaksi (Kode Aslimu yang Sudah Sempurna)
         public bool simpan_transaksi_penyortiran(string id_transaksi, int id_petani, int id_akun_petugas,
                                                  bool status_veto, int total_point, string id_grade,
                                                  decimal berat_kg, string[] kriteria_id, int[] poin_kriteria)
@@ -89,6 +90,149 @@ namespace TobaSort.Controllers
                     }
                 }
             }
+        }
+
+        // --- 2. Fungsi Menampilkan Riwayat Transaksi (Untuk Manajer) ---
+        public DataTable tampil_riwayat_transaksi()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                using (NpgsqlConnection conn = DatabaseHelper.GetConnection())
+                {
+                    conn.Open();
+                    // Query untuk menggabungkan data transaksi, petani, dan petugas yang melayani
+                    string query = @"
+                        SELECT 
+                            t.id_transaksi AS ""ID Transaksi"", 
+                            p.nama_petani AS ""Nama Petani"", 
+                            a.nama_lengkap AS ""Petugas"",
+                            t.berat_kg AS ""Berat (Kg)"", 
+                            t.total_point AS ""Total Poin"", 
+                            t.id_grade AS ""Grade"", 
+                            t.status_veto AS ""Veto?"",
+                            t.total_bayar AS ""Total Bayar (Rp)""
+                        FROM 
+                            tb_transaksi t
+                        JOIN 
+                            tb_petani p ON t.id_petani = p.id_petani
+                        JOIN 
+                            tb_akun a ON t.id_akun_petugas = a.id_akun
+                        ORDER BY 
+                            t.id_transaksi DESC";
+
+                    using (NpgsqlCommand cmd = new NpgsqlCommand(query, conn))
+                    {
+                        using (NpgsqlDataAdapter da = new NpgsqlDataAdapter(cmd))
+                        {
+                            da.Fill(dt);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Gagal memuat riwayat transaksi: " + ex.Message);
+            }
+            return dt;
+        }
+
+        // --- 3. Fungsi Menampilkan Riwayat Khusus 1 Petani ---
+        public DataTable tampil_riwayat_petani(string nama_petani)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                using (NpgsqlConnection conn = DatabaseHelper.GetConnection())
+                {
+                    conn.Open();
+                    // Query ini memfilter data HANYA untuk petani yang namanya sesuai dengan yang sedang login
+                    string query = @"
+                        SELECT 
+                            t.id_transaksi AS ""ID Transaksi"", 
+                            t.berat_kg AS ""Berat (Kg)"", 
+                            t.total_point AS ""Total Poin"", 
+                            t.id_grade AS ""Grade"", 
+                            t.status_veto AS ""Kena Veto?"",
+                            t.total_bayar AS ""Total Uang (Rp)""
+                        FROM 
+                            tb_transaksi t
+                        JOIN 
+                            tb_petani p ON t.id_petani = p.id_petani
+                        WHERE 
+                            p.nama_petani = @nama
+                        ORDER BY 
+                            t.id_transaksi DESC";
+
+                    using (NpgsqlCommand cmd = new NpgsqlCommand(query, conn))
+                    {
+                        // Memasukkan parameter nama untuk keamanan
+                        cmd.Parameters.AddWithValue("@nama", nama_petani);
+
+                        using (NpgsqlDataAdapter da = new NpgsqlDataAdapter(cmd))
+                        {
+                            da.Fill(dt);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Gagal memuat riwayat petani: " + ex.Message);
+            }
+            return dt;
+        }
+
+        // --- TAMBAHAN BARU: 4. Fungsi Filter Tanggal Laporan ---
+        public DataTable tampil_riwayat_berdasarkan_tanggal(DateTime tgl_awal, DateTime tgl_akhir)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                using (NpgsqlConnection conn = DatabaseHelper.GetConnection())
+                {
+                    conn.Open();
+                    // Query ini ditambahkan WHERE DATE(waktu_transaksi) untuk membatasi rentang waktu
+                    string query = @"
+                        SELECT 
+                            t.id_transaksi AS ""ID Transaksi"", 
+                            t.waktu_transaksi AS ""Tanggal"",
+                            p.nama_petani AS ""Nama Petani"", 
+                            a.nama_lengkap AS ""Petugas"",
+                            t.berat_kg AS ""Berat (Kg)"", 
+                            t.total_point AS ""Total Poin"", 
+                            t.id_grade AS ""Grade"", 
+                            t.status_veto AS ""Veto?"",
+                            t.total_bayar AS ""Total Bayar (Rp)""
+                        FROM 
+                            tb_transaksi t
+                        JOIN 
+                            tb_petani p ON t.id_petani = p.id_petani
+                        JOIN 
+                            tb_akun a ON t.id_akun_petugas = a.id_akun
+                        WHERE 
+                            DATE(t.waktu_transaksi) >= @awal AND DATE(t.waktu_transaksi) <= @akhir
+                        ORDER BY 
+                            t.waktu_transaksi DESC";
+
+                    using (NpgsqlCommand cmd = new NpgsqlCommand(query, conn))
+                    {
+                        // Hanya mengambil format tanggal (tanpa jam) agar akurat
+                        cmd.Parameters.AddWithValue("@awal", tgl_awal.Date);
+                        cmd.Parameters.AddWithValue("@akhir", tgl_akhir.Date);
+
+                        using (NpgsqlDataAdapter da = new NpgsqlDataAdapter(cmd))
+                        {
+                            da.Fill(dt);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Gagal memfilter tanggal: " + ex.Message);
+            }
+            return dt;
         }
     }
 }

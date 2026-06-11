@@ -30,13 +30,17 @@ namespace TobaSort.Views
             btnMenuPetugas.Visible = false;
             btnMenuPetani.Visible = false;
             btnKelolaPetani.Visible = false;
+            btnLaporan.Visible = false;     // <-- Tambahan keamanan untuk tombol laporan
+            btnStokGudang.Visible = false;  // <-- Tambahan keamanan untuk tombol stok gudang
 
             // 3. Buka akses sesuai dengan nama role ASLI di database
             if (akun_aktif.role == "Manajer")
             {
-                // Manajer mendapatkan hak akses menu utamanya DAN menu Kelola Petani
+                // Manajer mendapatkan hak akses menu utamanya, Kelola Petani, Laporan, dan Stok
                 btnMenuManajer.Visible = true;
                 btnKelolaPetani.Visible = true;
+                btnLaporan.Visible = true;
+                btnStokGudang.Visible = true; // <-- Tampilkan tombol stok gudang khusus Manajer
             }
             else if (akun_aktif.role == "Petugas")
             {
@@ -49,6 +53,7 @@ namespace TobaSort.Views
                 btnMenuPetani.Visible = true;
             }
         }
+
         // Fungsi ketika tombol logout ditekan
         private void btnLogout_Click(object sender, EventArgs e)
         {
@@ -72,11 +77,31 @@ namespace TobaSort.Views
             form_transaksi.ShowDialog();
         }
 
-        // --- KODE BARU: Fungsi membuka Form Kelola Petani ---
+        // Fungsi membuka Form Kelola Petani
         private void btnKelolaPetani_Click(object sender, EventArgs e)
         {
             FormPetani form_petani = new FormPetani();
             form_petani.ShowDialog();
+        }
+
+        // Fungsi membuka Form Laporan
+        private void btnLaporan_Click(object sender, EventArgs e)
+        {
+            FormLaporanTransaksi form_laporan = new FormLaporanTransaksi();
+            form_laporan.ShowDialog();
+        }
+
+        // --- KODE BARU: Fungsi membuka Form Stok Gudang ---
+        private void btnStokGudang_Click(object sender, EventArgs e)
+        {
+            FormStokGudang form_stok = new FormStokGudang();
+            form_stok.ShowDialog();
+        }
+
+        private void btnMenuPetani_Click(object sender, EventArgs e)
+        {
+            FormRiwayatPetani form_riwayat = new FormRiwayatPetani(akun_aktif);
+            form_riwayat.ShowDialog();
         }
     }
 }

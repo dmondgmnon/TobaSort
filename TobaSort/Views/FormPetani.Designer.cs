@@ -104,9 +104,12 @@
             // 
             // dgvPetani
             // 
+            this.dgvPetani.AllowUserToAddRows = false;
+            this.dgvPetani.AllowUserToDeleteRows = false;
             this.dgvPetani.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvPetani.Location = new System.Drawing.Point(12, 12);
             this.dgvPetani.Name = "dgvPetani";
+            this.dgvPetani.ReadOnly = true;
             this.dgvPetani.RowHeadersWidth = 51;
             this.dgvPetani.RowTemplate.Height = 24;
             this.dgvPetani.Size = new System.Drawing.Size(564, 150);
