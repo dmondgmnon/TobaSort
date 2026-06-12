@@ -32,18 +32,17 @@ namespace TobaSort.Views
 
                 if (akun_login != null)
                 {
-                    MessageBox.Show($"Selamat datang, {akun_login.nama_lengkap}!\nRole Anda: {akun_login.role}", "Login Berhasil", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // --- ALUR LOGIN ---
+                    FormDashboard dashboard = new FormDashboard(akun_login);
 
-                    // --- KODE BARU: PINDAH KE DASHBOARD ---
-                    FormDashboard dashboard = new FormDashboard(akun_login); // Kirim data akun ke dashboard
-                    this.Hide();            // Sembunyikan form login
-                    dashboard.ShowDialog(); // Tampilkan dashboard (sistem berhenti di sini sampai dashboard ditutup)
-                    this.Show();            // Munculkan form login kembali setelah pengguna menekan tombol logout
+                    this.Hide();            // Sembunyikan Form Login
+                    dashboard.ShowDialog(); // Tampilkan Dashboard sampai ditutup (Logout)
+                    this.Show();            // Munculkan kembali Form Login setelah Logout
 
-                    // Bersihkan isian agar siap digunakan login orang lain
+                    // Bersihkan isian setelah kembali ke layar login
                     txtUsername.Clear();
                     txtPassword.Clear();
-                    // --------------------------------------
+                    txtUsername.Focus();
                 }
                 else
                 {
