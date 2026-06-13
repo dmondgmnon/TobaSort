@@ -47,32 +47,23 @@
             this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPetani)).BeginInit();
             this.SuspendLayout();
-            // 
-            // txtNama
-            // 
+            
             this.txtNama.Location = new System.Drawing.Point(30, 215);
             this.txtNama.Name = "txtNama";
             this.txtNama.Size = new System.Drawing.Size(100, 22);
             this.txtNama.TabIndex = 0;
-            this.txtNama.TextChanged += new System.EventHandler(this.txtNama_TextChanged);
-            // 
-            // txtAlamat
-            // 
+            
             this.txtAlamat.Location = new System.Drawing.Point(30, 262);
             this.txtAlamat.Multiline = true;
             this.txtAlamat.Name = "txtAlamat";
             this.txtAlamat.Size = new System.Drawing.Size(100, 22);
             this.txtAlamat.TabIndex = 1;
-            // 
-            // txtNoTelp
-            // 
+             
             this.txtNoTelp.Location = new System.Drawing.Point(30, 318);
             this.txtNoTelp.Name = "txtNoTelp";
             this.txtNoTelp.Size = new System.Drawing.Size(100, 22);
             this.txtNoTelp.TabIndex = 2;
-            // 
-            // btnSimpan
-            // 
+            
             this.btnSimpan.Location = new System.Drawing.Point(501, 199);
             this.btnSimpan.Name = "btnSimpan";
             this.btnSimpan.Size = new System.Drawing.Size(75, 23);
@@ -80,9 +71,7 @@
             this.btnSimpan.Text = "tambah baru";
             this.btnSimpan.UseVisualStyleBackColor = true;
             this.btnSimpan.Click += new System.EventHandler(this.btnSimpan_Click);
-            // 
-            // btnEdit
-            // 
+            
             this.btnEdit.Location = new System.Drawing.Point(501, 250);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(75, 23);
@@ -90,9 +79,7 @@
             this.btnEdit.Text = "simpan editan ";
             this.btnEdit.UseVisualStyleBackColor = true;
             this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
-            // 
-            // btnHapus
-            // 
+            
             this.btnHapus.Location = new System.Drawing.Point(501, 316);
             this.btnHapus.Name = "btnHapus";
             this.btnHapus.Size = new System.Drawing.Size(75, 30);
@@ -100,9 +87,7 @@
             this.btnHapus.Text = "nonaktifkan(hapus)";
             this.btnHapus.UseVisualStyleBackColor = true;
             this.btnHapus.Click += new System.EventHandler(this.btnHapus_Click);
-            // 
-            // btnClear
-            // 
+            
             this.btnClear.Location = new System.Drawing.Point(501, 368);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(75, 23);
@@ -110,9 +95,7 @@
             this.btnClear.Text = "bersikan from";
             this.btnClear.UseVisualStyleBackColor = true;
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
-            // 
-            // dgvPetani
-            // 
+            
             this.dgvPetani.AllowUserToAddRows = false;
             this.dgvPetani.AllowUserToDeleteRows = false;
             this.dgvPetani.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -124,23 +107,17 @@
             this.dgvPetani.Size = new System.Drawing.Size(564, 150);
             this.dgvPetani.TabIndex = 7;
             this.dgvPetani.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPetani_CellClick);
-            // 
-            // txtUsername
-            // 
+            
             this.txtUsername.Location = new System.Drawing.Point(292, 215);
             this.txtUsername.Name = "txtUsername";
             this.txtUsername.Size = new System.Drawing.Size(100, 22);
             this.txtUsername.TabIndex = 8;
-            // 
-            // txtPassword
-            // 
+            
             this.txtPassword.Location = new System.Drawing.Point(292, 262);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(100, 22);
             this.txtPassword.TabIndex = 9;
-            // 
-            // chkAktif
-            // 
+             
             this.chkAktif.AutoSize = true;
             this.chkAktif.Location = new System.Drawing.Point(292, 322);
             this.chkAktif.Name = "chkAktif";
@@ -148,63 +125,49 @@
             this.chkAktif.TabIndex = 10;
             this.chkAktif.Text = "Status Aktif";
             this.chkAktif.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
+             
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(27, 184);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(44, 16);
             this.label1.TabIndex = 11;
             this.label1.Text = "nama ";
-            // 
-            // label2
-            // 
+            
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(27, 250);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(48, 16);
             this.label2.TabIndex = 12;
             this.label2.Text = "alamat";
-            // 
-            // label3
-            // 
+            
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(27, 299);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(85, 16);
             this.label3.TabIndex = 13;
             this.label3.Text = "no telephone";
-            // 
-            // label4
-            // 
+            
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(289, 199);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(70, 16);
             this.label4.TabIndex = 14;
             this.label4.Text = "Username";
-            // 
-            // label5
-            // 
+            
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(289, 243);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(67, 16);
             this.label5.TabIndex = 15;
             this.label5.Text = "Password";
-            // 
-            // label6
-            // 
+            
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(289, 299);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(44, 16);
             this.label6.TabIndex = 16;
             this.label6.Text = "Status";
-            // 
-            // FormPetani
-            // 
+             
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);

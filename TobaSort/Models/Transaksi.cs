@@ -17,7 +17,7 @@ namespace TobaSort.Models
         public decimal? harga_per_kg_saat_transaksi { get; set; }
         public decimal? total_bayar { get; set; }
 
-        // Status transaksi hanya boleh: "Antrean", "Selesai", atau "Batal"
+        
         public string status_transaksi { get; set; }
         public string catatan_mutu_global { get; set; }
 

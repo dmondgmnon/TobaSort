@@ -6,13 +6,16 @@ namespace TobaSort.Views
 {
     public partial class FormPetani : Form
     {
-        private PetaniController petani_controller;
-        private int id_petani_terpilih = 0;
+        private PetaniController _controller;
+        private int _id_petani_terpilih = 0;
 
         public FormPetani()
         {
             InitializeComponent();
-            petani_controller = new PetaniController();
+
+            // Inisialisasi melalui Controller
+            _controller = new PetaniController();
+
             muat_data_tabel();
         }
 
@@ -20,14 +23,14 @@ namespace TobaSort.Views
         {
             try
             {
-                dgvPetani.DataSource = petani_controller.tampil_semua_petani();
+                dgvPetani.DataSource = _controller.tampil_semua_petani();
 
                 if (dgvPetani.Columns.Contains("id_petani"))
                     dgvPetani.Columns["id_petani"].Visible = false;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Gagal memuat data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -39,7 +42,7 @@ namespace TobaSort.Views
             txtUsername.Clear();
             txtPassword.Clear();
             chkAktif.Checked = true;
-            id_petani_terpilih = 0;
+            _id_petani_terpilih = 0;
         }
 
         private void btnSimpan_Click(object sender, EventArgs e)
@@ -52,17 +55,17 @@ namespace TobaSort.Views
 
             try
             {
-                bool sukses = petani_controller.tambah_petani(txtNama.Text, txtAlamat.Text, txtNoTelp.Text, txtUsername.Text, txtPassword.Text);
+                bool sukses = _controller.tambah_petani(txtNama.Text, txtAlamat.Text, txtNoTelp.Text, txtUsername.Text, txtPassword.Text);
                 if (sukses)
                 {
-                    MessageBox.Show("Data profil dan akun login petani berhasil ditambahkan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Data petani berhasil ditambahkan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     bersihkan_form();
                     muat_data_tabel();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Gagal menyimpan: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -71,7 +74,7 @@ namespace TobaSort.Views
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dgvPetani.Rows[e.RowIndex];
-                id_petani_terpilih = Convert.ToInt32(row.Cells["id_petani"].Value);
+                _id_petani_terpilih = Convert.ToInt32(row.Cells["id_petani"].Value);
 
                 txtNama.Text = row.Cells["Nama Petani"].Value.ToString();
                 txtAlamat.Text = row.Cells["Alamat"].Value.ToString();
@@ -84,7 +87,7 @@ namespace TobaSort.Views
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            if (id_petani_terpilih == 0)
+            if (_id_petani_terpilih == 0)
             {
                 MessageBox.Show("Pilih data petani dari tabel terlebih dahulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -92,38 +95,38 @@ namespace TobaSort.Views
 
             try
             {
-                bool sukses = petani_controller.edit_petani(
-                    id_petani_terpilih, txtNama.Text, txtAlamat.Text, txtNoTelp.Text,
+                bool sukses = _controller.edit_petani(
+                    _id_petani_terpilih, txtNama.Text, txtAlamat.Text, txtNoTelp.Text,
                     txtUsername.Text, txtPassword.Text, chkAktif.Checked
                 );
 
                 if (sukses)
                 {
-                    MessageBox.Show("Data profil dan akun petani berhasil diubah!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Data petani berhasil diubah!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     bersihkan_form();
                     muat_data_tabel();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Gagal mengedit: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btnHapus_Click(object sender, EventArgs e)
         {
-            if (id_petani_terpilih == 0)
+            if (_id_petani_terpilih == 0)
             {
                 MessageBox.Show("Pilih data petani dari tabel terlebih dahulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            DialogResult dialog = MessageBox.Show("Apakah Anda yakin ingin menonaktifkan hak akses login petani ini?", "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult dialog = MessageBox.Show("Apakah Anda yakin ingin menonaktifkan akun petani ini?", "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialog == DialogResult.Yes)
             {
                 try
                 {
-                    bool sukses = petani_controller.nonaktifkan_petani(id_petani_terpilih);
+                    bool sukses = _controller.nonaktifkan_petani(_id_petani_terpilih);
                     if (sukses)
                     {
                         MessageBox.Show("Akses login petani berhasil dinonaktifkan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -133,7 +136,7 @@ namespace TobaSort.Views
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Gagal menonaktifkan: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -141,10 +144,6 @@ namespace TobaSort.Views
         private void btnClear_Click(object sender, EventArgs e)
         {
             bersihkan_form();
-        }
-
-        private void txtNama_TextChanged(object sender, EventArgs e)
-        {
         }
     }
 }

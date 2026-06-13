@@ -2,7 +2,7 @@
 
 namespace TobaSort.Models
 {
-    // Menginduk ke class Orang
+    
     public class Petani : Orang
     {
         // Menyembunyikan/override properti nama_lengkap dari induk 

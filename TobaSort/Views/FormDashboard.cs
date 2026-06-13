@@ -19,7 +19,6 @@ namespace TobaSort.Views
 
         private void atur_tampilan_berdasarkan_role()
         {
-            // --- Mengisi Kartu Profil ---
             lblJudulDashboard.Text = $"Dashboard {akun_aktif.role}";
             lblValueId.Text = akun_aktif.id.ToString();
             lblValueNama.Text = akun_aktif.nama_lengkap.ToUpper();
@@ -27,7 +26,7 @@ namespace TobaSort.Views
             lblValueStatus.Text = "● Aktif";
             lblValueStatus.ForeColor = Color.ForestGreen;
 
-            // 2. Tutup semua akses tombol terlebih dahulu (Keamanan)
+            // Tutup semua akses tombol terlebih dahulu (Keamanan)
             btnMenuManajer.Visible = false;
             btnMenuPetugas.Visible = false;
             btnMenuPetani.Visible = false;
@@ -36,8 +35,8 @@ namespace TobaSort.Views
             btnStokGudang.Visible = false;
             btnKelolaHarga.Visible = false;
 
-            // 3. Buka akses sesuai dengan nama role ASLI di database
-            if (akun_aktif.role == "Manajer")
+            // SESUAIKAN DENGAN NAMA ROLE DI DATABASE ANDA
+            if (akun_aktif.role == "Admin Gudang")
             {
                 btnMenuManajer.Visible = true;
                 btnKelolaPetani.Visible = true;
@@ -45,7 +44,7 @@ namespace TobaSort.Views
                 btnStokGudang.Visible = true;
                 btnKelolaHarga.Visible = true;
             }
-            else if (akun_aktif.role == "Petugas")
+            else if (akun_aktif.role == "Petugas Grading")
             {
                 btnMenuPetugas.Visible = true;
             }
@@ -60,89 +59,40 @@ namespace TobaSort.Views
 
         private void SusunUlangPosisiTombol()
         {
-            // Tentukan titik awal Y untuk tombol pertama (di bawah profil)
             int jarak_y = 200;
-
-            // Masukkan semua tombol menu ke dalam array secara berurutan
             Button[] semua_tombol = { btnMenuManajer, btnKelolaHarga, btnKelolaPetani, btnStokGudang, btnLaporan, btnMenuPetugas, btnMenuPetani };
 
             foreach (Button btn in semua_tombol)
             {
                 if (btn != null && btn.Visible)
                 {
-                    btn.Top = jarak_y; // Pindahkan ke posisi Y yang baru
-                    jarak_y += btn.Height + 15; // Jarak antar tombol menu
+                    btn.Top = jarak_y;
+                    jarak_y += btn.Height + 15;
                 }
             }
 
-            // Paksa tombol Logout berada di area paling bawah Form
             if (btnLogout != null)
             {
                 btnLogout.Top = this.ClientSize.Height - btnLogout.Height - 40;
             }
         }
 
-        // ==========================================
-        // LOGIKA TOMBOL 
-        // ==========================================
-
         private void btnLogout_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void btnMenuManajer_Click(object sender, EventArgs e)
-        {
-            FormManajer form_manajer = new FormManajer();
-            form_manajer.ShowDialog();
-        }
+        private void btnMenuManajer_Click(object sender, EventArgs e) { new FormManajer().ShowDialog(); }
+        private void btnMenuPetugas_Click(object sender, EventArgs e) { new FormTransaksi(akun_aktif).ShowDialog(); }
+        private void btnKelolaPetani_Click(object sender, EventArgs e) { new FormPetani().ShowDialog(); }
+        private void btnLaporan_Click(object sender, EventArgs e) { new FormLaporanTransaksi().ShowDialog(); }
+        private void btnStokGudang_Click(object sender, EventArgs e) { new FormStokGudang().ShowDialog(); }
+        private void btnMenuPetani_Click(object sender, EventArgs e) { new FormRiwayatPetani(akun_aktif).ShowDialog(); }
+        private void btnKelolaHarga_Click(object sender, EventArgs e) { new FormKelolaHarga(akun_aktif).ShowDialog(); }
 
-        private void btnMenuPetugas_Click(object sender, EventArgs e)
-        {
-            FormTransaksi form_transaksi = new FormTransaksi(akun_aktif);
-            form_transaksi.ShowDialog();
-        }
-
-        private void btnKelolaPetani_Click(object sender, EventArgs e)
-        {
-            FormPetani form_petani = new FormPetani();
-            form_petani.ShowDialog();
-        }
-
-        private void btnLaporan_Click(object sender, EventArgs e)
-        {
-            FormLaporanTransaksi form_laporan = new FormLaporanTransaksi();
-            form_laporan.ShowDialog();
-        }
-
-        private void btnStokGudang_Click(object sender, EventArgs e)
-        {
-            FormStokGudang form_stok = new FormStokGudang();
-            form_stok.ShowDialog();
-        }
-
-        private void btnMenuPetani_Click(object sender, EventArgs e)
-        {
-            FormRiwayatPetani form_riwayat = new FormRiwayatPetani(akun_aktif);
-            form_riwayat.ShowDialog();
-        }
-
-        private void btnKelolaHarga_Click(object sender, EventArgs e)
-        {
-            FormKelolaHarga form_harga = new FormKelolaHarga(akun_aktif);
-            form_harga.ShowDialog();
-        }
-
-        // ==========================================
-        // EVENT KOSONG (Biarkan saja agar file Designer tidak error)
-        // ==========================================
         private void button4_Click(object sender, EventArgs e) { }
         private void label3_Click(object sender, EventArgs e) { }
         private void lblValueNama_Click(object sender, EventArgs e) { }
-
-        private void FormDashboard_Load(object sender, EventArgs e)
-        {
-
-        }
+        private void FormDashboard_Load(object sender, EventArgs e) { }
     }
 }

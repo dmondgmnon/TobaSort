@@ -7,17 +7,17 @@ namespace TobaSort.Views
 {
     public partial class FormRiwayatPetani : Form
     {
-        private TransaksiController trx_controller;
-        private Akun akun_petani;
+        private TransaksiController _controller;
+        private Akun _akun_petani;
 
-        // Constructor menerima data akun yang sedang login
         public FormRiwayatPetani(Akun akun_login)
         {
             InitializeComponent();
-            trx_controller = new TransaksiController();
-            this.akun_petani = akun_login;
 
-            // Memuat riwayat transaksi berdasarkan id_akun petani
+            // Inisialisasi melalui Controller (Pola Arsitektur Baru)
+            _controller = new TransaksiController();
+            _akun_petani = akun_login;
+
             muat_riwayat();
         }
 
@@ -25,9 +25,10 @@ namespace TobaSort.Views
         {
             try
             {
-                // UPDATE: Mengirimkan akun_petani.id (int) sesuai dengan TransaksiController yang baru
-                dgvRiwayat.DataSource = trx_controller.tampil_riwayat_petani(akun_petani.id);
+                // Memanggil method dari Controller dengan ID petani
+                dgvRiwayat.DataSource = _controller.tampil_riwayat_petani(_akun_petani.id);
 
+                // Format angka untuk kolom uang
                 if (dgvRiwayat.Columns.Contains("Total Uang (Rp)"))
                 {
                     dgvRiwayat.Columns["Total Uang (Rp)"].DefaultCellStyle.Format = "N0";
@@ -35,7 +36,7 @@ namespace TobaSort.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Gagal memuat riwayat: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

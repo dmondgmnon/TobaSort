@@ -7,12 +7,13 @@ namespace TobaSort.Views
 {
     public partial class FormLogin : Form
     {
-        private AuthController auth_controller;
+        private AuthController _controller;
 
         public FormLogin()
         {
             InitializeComponent();
-            auth_controller = new AuthController();
+            // Penamaan seragam dengan form lain
+            _controller = new AuthController();
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -28,18 +29,17 @@ namespace TobaSort.Views
 
             try
             {
-                Akun akun_login = auth_controller.login(username, password);
+                // Memanggil fungsi dari controller
+                Akun akun_login = _controller.login(username, password);
 
                 if (akun_login != null)
                 {
-                    // --- ALUR LOGIN ---
                     FormDashboard dashboard = new FormDashboard(akun_login);
 
-                    this.Hide();            // Sembunyikan Form Login
-                    dashboard.ShowDialog(); // Tampilkan Dashboard sampai ditutup (Logout)
-                    this.Show();            // Munculkan kembali Form Login setelah Logout
+                    this.Hide();
+                    dashboard.ShowDialog();
+                    this.Show();
 
-                    // Bersihkan isian setelah kembali ke layar login
                     txtUsername.Clear();
                     txtPassword.Clear();
                     txtUsername.Focus();

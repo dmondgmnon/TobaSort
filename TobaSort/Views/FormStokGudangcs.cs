@@ -6,12 +6,15 @@ namespace TobaSort.Views
 {
     public partial class FormStokGudang : Form
     {
-        private GudangController gudang_controller;
+        private GudangController _controller;
 
         public FormStokGudang()
         {
             InitializeComponent();
-            gudang_controller = new GudangController();
+
+            // Inisialisasi melalui Controller (Pola Arsitektur Baru)
+            _controller = new GudangController();
+
             muat_stok();
         }
 
@@ -19,11 +22,12 @@ namespace TobaSort.Views
         {
             try
             {
-                dgvStok.DataSource = gudang_controller.tampil_stok_gudang();
+                // Memanggil method dari Controller
+                dgvStok.DataSource = _controller.tampil_stok_gudang();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Gagal memuat data stok: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

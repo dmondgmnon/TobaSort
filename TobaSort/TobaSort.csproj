@@ -77,15 +77,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\AkunController.cs" />
-    <Compile Include="Controllers\AuthController.cs" />
-    <Compile Include="Controllers\GradeController.cs" />
-    <Compile Include="Controllers\GudangController.cs" />
-    <Compile Include="Controllers\PetaniController.cs" />
-    <Compile Include="Controllers\TransaksiController.cs" />
+    <Compile Include="Contexts\AkunContext.cs" />
+    <Compile Include="Contexts\GradeContext.cs" />
+    <Compile Include="Contexts\GudangContext.cs" />
+    <Compile Include="Contexts\PetaniContext.cs" />
+    <Compile Include="Contexts\TransaksiContext.cs" />
+    <Compile Include="Controller\AkunController.cs" />
+    <Compile Include="Controller\AuthController.cs" />
+    <Compile Include="Controller\GradeController.cs" />
+    <Compile Include="Controller\GudangController.cs" />
+    <Compile Include="Controller\PetaniController.cs" />
+    <Compile Include="Controller\TransaksiController.cs" />
     <Compile Include="Data\DatabaseHelper.cs" />
     <Compile Include="Interfaces\ICetakLaporan.cs" />
     <Compile Include="Interfaces\IPenilaian.cs" />
+    <Compile Include="Interfaces\IContext.cs" />
     <Compile Include="Models\Akun.cs" />
     <Compile Include="Models\DetailPenilaian.cs" />
     <Compile Include="Models\Orang.cs" />
@@ -204,5 +210,6 @@
   <ItemGroup>
     <None Include="Resources\key icon.jpg" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
