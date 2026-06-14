@@ -16,6 +16,12 @@ namespace TobaSort.Views
             // Inisialisasi melalui Controller
             _controller = new PetaniController();
 
+            // Menyembunyikan password saat form pertama kali dibuka
+            if (this.Controls.Find("txtPassword", true).Length > 0)
+            {
+                txtPassword.UseSystemPasswordChar = true;
+            }
+
             muat_data_tabel();
         }
 
@@ -144,6 +150,22 @@ namespace TobaSort.Views
         private void btnClear_Click(object sender, EventArgs e)
         {
             bersihkan_form();
+        }
+
+        // ====================================================
+        // FITUR TAMBAHAN: IKON MATA & KEMBALI
+        // ====================================================
+        private void btnMata_Click(object sender, EventArgs e)
+        {
+            if (this.Controls.Find("txtPassword", true).Length > 0)
+            {
+                txtPassword.UseSystemPasswordChar = !txtPassword.UseSystemPasswordChar;
+            }
+        }
+
+        private void lblKembali_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

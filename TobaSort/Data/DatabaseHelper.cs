@@ -7,7 +7,7 @@ namespace TobaSort.Data
     public abstract class DatabaseHelper
     {
         // Pilar Encapsulation: String koneksi dikunci rapat dari akses luar
-        private readonly string connectionString = "Host=localhost;Port=5432;Database=tobasort1;Username=postgres;Password=Yogan1416;";
+        private readonly string connectionString = "Host=localhost;Port=5432;Database=projeks22;Username=postgres;Password=170307;";
 
         // Pilar Inheritance: Fungsi ini dilindungi (protected), 
         // HANYA class di dalam folder Contexts yang bisa memanggilnya

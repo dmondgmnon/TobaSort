@@ -275,7 +275,7 @@
             this.ForeColor = System.Drawing.Color.DimGray;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "FormDashboard";
-            this.Text = "FormDashboard";
+            this.Text = "view";
             this.Load += new System.EventHandler(this.FormDashboard_Load);
             this.panelProfil.ResumeLayout(false);
             this.panelProfil.PerformLayout();
