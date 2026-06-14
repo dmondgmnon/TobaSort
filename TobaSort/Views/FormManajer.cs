@@ -43,7 +43,7 @@ namespace TobaSort.Views
             txtUsername.Clear();
             txtPassword.Clear();
             cmbRole.SelectedIndex = -1;
-            cmbStatus.SelectedIndex = -1; // Reset agar validasi berjalan
+            cmbStatus.SelectedIndex = -1;
             btnSimpan.Text = "💾 SIMPAN PERUBAHAN DATA";
             btnHapus.Text = "NONAKTIFKAN";
         }
@@ -60,19 +60,27 @@ namespace TobaSort.Views
                 cmbRole.Text = row.Cells["Role"].Value.ToString();
                 txtPassword.Clear();
 
-                // Sinkronisasi status ke ComboBox
+                // PERBAIKAN: Baca status menggunakan Index agar kebal terhadap error teks
                 string statusDb = row.Cells["Status Aktif"].Value.ToString().ToLower();
-                cmbStatus.Text = (statusDb == "true" || statusDb == "1") ? "Aktif" : "Non-Aktif";
+                bool isAktif = (statusDb == "true" || statusDb == "1");
 
-                // Smart Button Logic: Tombol menyesuaikan diri
-                btnHapus.Text = (cmbStatus.Text == "Aktif") ? "NONAKTIFKAN" : "AKTIFKAN";
+                if (isAktif)
+                {
+                    cmbStatus.SelectedIndex = 0; // Pilih baris ke-1 (Aktif)
+                    btnHapus.Text = "NONAKTIFKAN"; // Siapkan tombol untuk mematikan
+                }
+                else
+                {
+                    cmbStatus.SelectedIndex = 1; // Pilih baris ke-2 (Non-Aktif)
+                    btnHapus.Text = "AKTIFKAN";    // Siapkan tombol untuk menghidupkan
+                }
+
                 btnSimpan.Text = "💾 UPDATE DATA AKUN";
             }
         }
 
         private void btnSimpan_Click(object sender, EventArgs e)
         {
-            // Validasi hanya untuk kolom profil (tidak wajib cek ComboBox status lagi)
             if (string.IsNullOrWhiteSpace(txtNama.Text) || string.IsNullOrWhiteSpace(txtUsername.Text) ||
                 string.IsNullOrWhiteSpace(txtPassword.Text) || cmbRole.SelectedIndex == -1)
             {
@@ -84,17 +92,15 @@ namespace TobaSort.Views
             {
                 bool sukses = false;
 
-                // Membaca teks di ComboBox (mendukung huruf kapital maupun kecil)
-                bool statusDipilih = (cmbStatus.Text == "Aktif" || cmbStatus.Text == "aktif");
+                // PERBAIKAN: Cek status menggunakan Index (0 = Aktif)
+                bool statusDipilih = (cmbStatus.SelectedIndex == 0);
 
                 if (idAkunTerpilih == "")
                 {
-                    // Tambah baru
                     sukses = _controller.tambah_akun(txtUsername.Text.Trim(), txtPassword.Text.Trim(), txtNama.Text.Trim(), cmbRole.Text);
                 }
                 else
                 {
-                    // Update profil dengan tetap mengirimkan status terakhir yang ada di ComboBox
                     sukses = _controller.ubah_akun(Convert.ToInt32(idAkunTerpilih), txtUsername.Text.Trim(), txtPassword.Text.Trim(), txtNama.Text.Trim(), cmbRole.Text, statusDipilih);
                 }
 
@@ -118,7 +124,7 @@ namespace TobaSort.Views
                 return;
             }
 
-            // PERBAIKAN LOGIKA: Gunakan teks tombol saat ini untuk menentukan aksi
+            // Baca aksi dari teks tombol saat ini
             bool akanDiaktifkan = (btnHapus.Text == "AKTIFKAN");
             string pesanAksi = akanDiaktifkan ? "mengaktifkan kembali" : "menonaktifkan";
 
@@ -128,14 +134,12 @@ namespace TobaSort.Views
             {
                 try
                 {
-                    // Kirim perintah boolean yang benar ke Jembatan (Controller)
+                    // Eksekusi perubahan
                     bool sukses = _controller.ubah_status_akun(Convert.ToInt32(idAkunTerpilih), akanDiaktifkan);
 
                     if (sukses)
                     {
                         MessageBox.Show($"Selesai! Akun berhasil di-{pesanAksi}.", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                        // Refresh data di tabel dan bersihkan form
                         MuatDataAkun();
                     }
                 }

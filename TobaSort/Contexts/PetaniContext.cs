@@ -16,6 +16,7 @@ namespace TobaSort.Contexts
             using (var conn = BuatKoneksi())
             {
                 conn.Open();
+                // PERBAIKAN: Menambahkan CAST agar boolean menjadi teks (menghindari error Checkbox)
                 string query = @"
                     SELECT 
                         p.id_petani, 
@@ -25,7 +26,7 @@ namespace TobaSort.Contexts
                         p.tanggal_daftar AS ""Tanggal Daftar"", 
                         a.username AS ""Username"", 
                         a.password AS ""Password"",
-                        a.is_aktif AS ""Status Aktif""
+                        CAST(a.is_aktif AS varchar) AS ""Status Aktif""
                     FROM tb_petani p
                     JOIN tb_akun a ON p.id_akun = a.id_akun
                     ORDER BY p.id_petani DESC";
@@ -131,6 +132,22 @@ namespace TobaSort.Contexts
                         transaction.Rollback();
                         throw new Exception("Gagal mengubah data petani: " + ex.Message);
                     }
+                }
+            }
+        }
+
+        public bool UbahStatusPetani(int id_petani, bool status_baru)
+        {
+            using (var conn = BuatKoneksi())
+            {
+                conn.Open();
+                string query = @"UPDATE tb_akun SET is_aktif = @status 
+                                 WHERE id_akun = (SELECT id_akun FROM tb_petani WHERE id_petani = @id)";
+                using (var cmd = new NpgsqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", id_petani);
+                    cmd.Parameters.AddWithValue("@status", status_baru);
+                    return cmd.ExecuteNonQuery() > 0;
                 }
             }
         }

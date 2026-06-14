@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Windows.Forms;
 using TobaSort.Controllers;
 
@@ -12,11 +13,8 @@ namespace TobaSort.Views
         public FormPetani()
         {
             InitializeComponent();
-
-            // Inisialisasi melalui Controller
             _controller = new PetaniController();
 
-            // Menyembunyikan password saat form pertama kali dibuka
             if (this.Controls.Find("txtPassword", true).Length > 0)
             {
                 txtPassword.UseSystemPasswordChar = true;
@@ -33,6 +31,9 @@ namespace TobaSort.Views
 
                 if (dgvPetani.Columns.Contains("id_petani"))
                     dgvPetani.Columns["id_petani"].Visible = false;
+
+                dgvPetani.ClearSelection();
+                bersihkan_form();
             }
             catch (Exception ex)
             {
@@ -47,11 +48,17 @@ namespace TobaSort.Views
             txtNoTelp.Clear();
             txtUsername.Clear();
             txtPassword.Clear();
-            chkAktif.Checked = true;
+            cmbStatus.SelectedIndex = -1; // Reset ComboBox
             _id_petani_terpilih = 0;
+
+            // Kembalikan teks tombol ke awal
+            btnNonaktif.Text = "NONAKTIFKAN";
         }
 
-        private void btnSimpan_Click(object sender, EventArgs e)
+        // ====================================================
+        // TOMBOL TAMBAH (Fungsi Insert Data Baru)
+        // ====================================================
+        private void btnTambah_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtNama.Text) || string.IsNullOrWhiteSpace(txtUsername.Text) || string.IsNullOrWhiteSpace(txtPassword.Text))
             {
@@ -65,7 +72,6 @@ namespace TobaSort.Views
                 if (sukses)
                 {
                     MessageBox.Show("Data petani berhasil ditambahkan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    bersihkan_form();
                     muat_data_tabel();
                 }
             }
@@ -75,6 +81,9 @@ namespace TobaSort.Views
             }
         }
 
+        // ====================================================
+        // KLIK TABEL (Sinkronisasi ke Form & ComboBox)
+        // ====================================================
         private void dgvPetani_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -86,12 +95,30 @@ namespace TobaSort.Views
                 txtAlamat.Text = row.Cells["Alamat"].Value.ToString();
                 txtNoTelp.Text = row.Cells["No. Telepon"].Value.ToString();
                 txtUsername.Text = row.Cells["Username"].Value.ToString();
-                txtPassword.Text = row.Cells["Password"].Value.ToString();
-                chkAktif.Checked = Convert.ToBoolean(row.Cells["Status Aktif"].Value);
+
+                txtPassword.Clear(); // Kosongkan password demi keamanan
+
+                // PERBAIKAN: Sinkronisasi status menggunakan SelectedIndex yang lebih aman
+                string statusDb = row.Cells["Status Aktif"].Value.ToString().ToLower();
+                bool isAktif = (statusDb == "true" || statusDb == "1");
+
+                if (isAktif)
+                {
+                    cmbStatus.SelectedIndex = 0; // Aktif
+                    btnNonaktif.Text = "NONAKTIFKAN";
+                }
+                else
+                {
+                    cmbStatus.SelectedIndex = 1; // Non-Aktif
+                    btnNonaktif.Text = "AKTIFKAN";
+                }
             }
         }
 
-        private void btnEdit_Click(object sender, EventArgs e)
+        // ====================================================
+        // TOMBOL SIMPAN (Fungsi Update/Edit Data)
+        // ====================================================
+        private void btnSimpan_Click(object sender, EventArgs e)
         {
             if (_id_petani_terpilih == 0)
             {
@@ -99,17 +126,25 @@ namespace TobaSort.Views
                 return;
             }
 
+            if (string.IsNullOrWhiteSpace(txtNama.Text) || string.IsNullOrWhiteSpace(txtUsername.Text))
+            {
+                MessageBox.Show("Nama Petani dan Username wajib diisi!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             try
             {
+                // PERBAIKAN: Membaca pilihan dari cmbStatus menggunakan index
+                bool statusDipilih = (cmbStatus.SelectedIndex == 0);
+
                 bool sukses = _controller.edit_petani(
                     _id_petani_terpilih, txtNama.Text, txtAlamat.Text, txtNoTelp.Text,
-                    txtUsername.Text, txtPassword.Text, chkAktif.Checked
+                    txtUsername.Text, txtPassword.Text, statusDipilih
                 );
 
                 if (sukses)
                 {
-                    MessageBox.Show("Data petani berhasil diubah!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    bersihkan_form();
+                    MessageBox.Show("Data profil petani berhasil disimpan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     muat_data_tabel();
                 }
             }
@@ -119,7 +154,10 @@ namespace TobaSort.Views
             }
         }
 
-        private void btnHapus_Click(object sender, EventArgs e)
+        // ====================================================
+        // TOMBOL NONAKTIFKAN (Fungsi Smart Toggle Status)
+        // ====================================================
+        private void btnNonaktif_Click(object sender, EventArgs e)
         {
             if (_id_petani_terpilih == 0)
             {
@@ -127,45 +165,78 @@ namespace TobaSort.Views
                 return;
             }
 
-            DialogResult dialog = MessageBox.Show("Apakah Anda yakin ingin menonaktifkan akun petani ini?", "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            // Gunakan teks tombol saat ini untuk menentukan aksi
+            bool akanDiaktifkan = (btnNonaktif.Text == "AKTIFKAN");
+            string pesanAksi = akanDiaktifkan ? "mengaktifkan kembali" : "menonaktifkan";
+
+            DialogResult dialog = MessageBox.Show($"Apakah Anda yakin ingin {pesanAksi} akun petani ini?", "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
             if (dialog == DialogResult.Yes)
             {
                 try
                 {
-                    bool sukses = _controller.nonaktifkan_petani(_id_petani_terpilih);
+                    bool sukses = _controller.ubah_status_petani(_id_petani_terpilih, akanDiaktifkan);
+
                     if (sukses)
                     {
-                        MessageBox.Show("Akses login petani berhasil dinonaktifkan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        bersihkan_form();
+                        MessageBox.Show($"Selesai! Akun petani berhasil di-{pesanAksi}.", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         muat_data_tabel();
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Gagal menonaktifkan: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Gagal mengubah status: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
-        private void btnClear_Click(object sender, EventArgs e)
-        {
-            bersihkan_form();
-        }
+        // ====================================================
+        // TOMBOL BERSIHKAN & LAINNYA
+        // ====================================================
+        private void btnBersihkan_Click(object sender, EventArgs e) => bersihkan_form();
 
-        // ====================================================
-        // FITUR TAMBAHAN: IKON MATA & KEMBALI
-        // ====================================================
         private void btnMata_Click(object sender, EventArgs e)
         {
             if (this.Controls.Find("txtPassword", true).Length > 0)
-            {
                 txtPassword.UseSystemPasswordChar = !txtPassword.UseSystemPasswordChar;
-            }
         }
 
-        private void lblKembali_Click(object sender, EventArgs e)
+        private void lblKembali_Click(object sender, EventArgs e) => this.Close();
+
+        private void FormPetani_Load(object sender, EventArgs e) { }
+
+        // ====================================================
+        // FITUR FORMATTING: Menyulap Tampilan Status di Tabel
+        // ====================================================
+        private void dgvPetani_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            this.Close();
+            if (e.RowIndex >= 0 && e.Value != null)
+            {
+                if (dgvPetani.Columns[e.ColumnIndex].Name == "Status Aktif")
+                {
+                    string statusDb = e.Value.ToString().ToLower();
+                    bool isAktif = (statusDb == "true" || statusDb == "1");
+
+                    e.Value = isAktif ? "Aktif" : "Non-Aktif";
+                    e.FormattingApplied = true;
+
+                    if (isAktif)
+                    {
+                        e.CellStyle.ForeColor = System.Drawing.Color.DarkGreen;
+                        e.CellStyle.BackColor = System.Drawing.Color.LightGreen;
+                    }
+                    else
+                    {
+                        e.CellStyle.ForeColor = System.Drawing.Color.DarkRed;
+                        e.CellStyle.BackColor = System.Drawing.Color.MistyRose;
+                    }
+
+                    if (e.CellStyle.Font != null)
+                    {
+                        e.CellStyle.Font = new System.Drawing.Font(e.CellStyle.Font, System.Drawing.FontStyle.Bold);
+                    }
+                }
+            }
         }
     }
 }
