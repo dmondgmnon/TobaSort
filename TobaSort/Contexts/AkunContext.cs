@@ -50,8 +50,9 @@ namespace TobaSort.Contexts
             using (var conn = BuatKoneksi())
             {
                 conn.Open();
-                string query = @"SELECT id_akun, nama_lengkap AS ""Nama"", username AS ""Username"", 
-                                        role AS ""Role"", is_aktif AS ""Status Aktif"" 
+                // FIX: Menambahkan kolom password dan menyesuaikan alias agar persis dengan yang dicari oleh event CellClick di FormManajer
+                string query = @"SELECT id_akun, nama_lengkap AS ""Nama Lengkap"", username AS ""Username"", 
+                                        password AS ""Password"", role AS ""Role"", is_aktif AS ""Status Aktif"" 
                                  FROM tb_akun 
                                  WHERE role IN ('Admin Gudang', 'Petugas Grading') 
                                  ORDER BY id_akun DESC";
@@ -67,7 +68,6 @@ namespace TobaSort.Contexts
             return dt;
         }
 
-        // Tambahan untuk FormManajer: Menambah Akun Pegawai
         public bool TambahAkun(string username, string password, string nama_lengkap, string role)
         {
             using (var conn = BuatKoneksi())
@@ -85,13 +85,13 @@ namespace TobaSort.Contexts
             }
         }
 
-        // FUNGSI BARU: Tambahan untuk FormManajer: Mengubah Data Akun
-        public bool UbahAkun(int id_akun, string username, string password, string nama_lengkap, string role)
+        // FUNGSI GABUNGAN: Menggunakan versi yang memiliki parameter is_aktif
+        public bool UbahAkun(int id_akun, string username, string password, string nama_lengkap, string role, bool is_aktif)
         {
             using (var conn = BuatKoneksi())
             {
                 conn.Open();
-                string query = "UPDATE tb_akun SET username = @user, password = @pass, nama_lengkap = @nama, role = @role WHERE id_akun = @id";
+                string query = "UPDATE tb_akun SET username = @user, password = @pass, nama_lengkap = @nama, role = @role, is_aktif = @aktif WHERE id_akun = @id";
                 using (var cmd = new NpgsqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@id", id_akun);
@@ -99,12 +99,29 @@ namespace TobaSort.Contexts
                     cmd.Parameters.AddWithValue("@pass", password);
                     cmd.Parameters.AddWithValue("@nama", nama_lengkap);
                     cmd.Parameters.AddWithValue("@role", role);
+                    cmd.Parameters.AddWithValue("@aktif", is_aktif);
                     return cmd.ExecuteNonQuery() > 0;
                 }
             }
         }
 
-        // Tambahan untuk FormManajer: Menonaktifkan Akun
+        // FUNGSI BARU (SMART BUTTON): Mengubah status aktif/nonaktif saja
+        public bool UbahStatusAkun(int id_akun, bool status_baru)
+        {
+            using (var conn = BuatKoneksi())
+            {
+                conn.Open();
+                string query = "UPDATE tb_akun SET is_aktif = @status WHERE id_akun = @id";
+                using (var cmd = new NpgsqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@status", status_baru);
+                    cmd.Parameters.AddWithValue("@id", id_akun);
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+            }
+        }
+
+        // (Fungsi lama tetap dipertahankan untuk jaga-jaga jika ada kode lain yang masih memanggilnya)
         public bool NonaktifkanAkun(int id_akun)
         {
             using (var conn = BuatKoneksi())
@@ -119,6 +136,7 @@ namespace TobaSort.Contexts
             }
         }
 
+        // INTERFACE IMPLEMENTATIONS (Wajib ada agar tidak error IContext)
         public List<Akun> GetAll() { return new List<Akun>(); }
         public Akun GetById(object id) { return null; }
         public bool Insert(Akun entity) { return false; }

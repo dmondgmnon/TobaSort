@@ -42,39 +42,42 @@
             this.btnReset = new System.Windows.Forms.Button();
             this.btnHapus = new System.Windows.Forms.Button();
             this.btnSimpan = new System.Windows.Forms.Button();
+            this.cmbStatus = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAkun)).BeginInit();
             this.SuspendLayout();
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(293, 25);
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(99)))), ((int)(((byte)(64)))), ((int)(((byte)(55)))));
+            this.label5.Location = new System.Drawing.Point(31, 32);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(188, 23);
+            this.label5.Size = new System.Drawing.Size(308, 38);
             this.label5.TabIndex = 12;
             this.label5.Text = "Daftar Akun Terdaftar";
             // 
             // dgvAkun
             // 
-            this.dgvAkun.BackgroundColor = System.Drawing.Color.White;
+            this.dgvAkun.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(248)))), ((int)(((byte)(245)))));
             this.dgvAkun.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvAkun.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvAkun.Location = new System.Drawing.Point(38, 51);
+            this.dgvAkun.Location = new System.Drawing.Point(28, 95);
             this.dgvAkun.Name = "dgvAkun";
             this.dgvAkun.ReadOnly = true;
             this.dgvAkun.RowHeadersVisible = false;
             this.dgvAkun.RowHeadersWidth = 51;
             this.dgvAkun.RowTemplate.Height = 24;
             this.dgvAkun.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvAkun.Size = new System.Drawing.Size(674, 161);
+            this.dgvAkun.Size = new System.Drawing.Size(828, 161);
             this.dgvAkun.TabIndex = 13;
             this.dgvAkun.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAkun_CellClick);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(38, 219);
+            this.label6.Location = new System.Drawing.Point(25, 314);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(158, 16);
             this.label6.TabIndex = 14;
@@ -85,16 +88,17 @@
             this.cmbRole.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbRole.FormattingEnabled = true;
             this.cmbRole.Items.AddRange(new object[] {
-            "Admin Gudang, Petugas Grading"});
-            this.cmbRole.Location = new System.Drawing.Point(51, 239);
+            "Admin Gudang",
+            "Petugas Grading"});
+            this.cmbRole.Location = new System.Drawing.Point(41, 334);
             this.cmbRole.Name = "cmbRole";
-            this.cmbRole.Size = new System.Drawing.Size(121, 24);
+            this.cmbRole.Size = new System.Drawing.Size(145, 24);
             this.cmbRole.TabIndex = 15;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(314, 219);
+            this.label7.Location = new System.Drawing.Point(38, 377);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(111, 16);
             this.label7.TabIndex = 16;
@@ -103,7 +107,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(477, 219);
+            this.label8.Location = new System.Drawing.Point(470, 324);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(188, 16);
             this.label8.TabIndex = 17;
@@ -111,22 +115,22 @@
             // 
             // txtNama
             // 
-            this.txtNama.Location = new System.Drawing.Point(317, 240);
+            this.txtNama.Location = new System.Drawing.Point(41, 398);
             this.txtNama.Name = "txtNama";
-            this.txtNama.Size = new System.Drawing.Size(100, 22);
+            this.txtNama.Size = new System.Drawing.Size(266, 22);
             this.txtNama.TabIndex = 18;
             // 
             // txtUsername
             // 
-            this.txtUsername.Location = new System.Drawing.Point(480, 240);
+            this.txtUsername.Location = new System.Drawing.Point(473, 345);
             this.txtUsername.Name = "txtUsername";
-            this.txtUsername.Size = new System.Drawing.Size(100, 22);
+            this.txtUsername.Size = new System.Drawing.Size(266, 22);
             this.txtUsername.TabIndex = 19;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(51, 301);
+            this.label1.Location = new System.Drawing.Point(470, 382);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(164, 16);
             this.label1.TabIndex = 20;
@@ -134,9 +138,9 @@
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(51, 321);
+            this.txtPassword.Location = new System.Drawing.Point(470, 405);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(164, 22);
+            this.txtPassword.Size = new System.Drawing.Size(269, 22);
             this.txtPassword.TabIndex = 21;
             this.txtPassword.UseSystemPasswordChar = true;
             // 
@@ -144,7 +148,7 @@
             // 
             this.btnMata.AutoSize = true;
             this.btnMata.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMata.Location = new System.Drawing.Point(196, 324);
+            this.btnMata.Location = new System.Drawing.Point(696, 408);
             this.btnMata.Name = "btnMata";
             this.btnMata.Size = new System.Drawing.Size(19, 16);
             this.btnMata.TabIndex = 22;
@@ -153,7 +157,7 @@
             // 
             // btnReset
             // 
-            this.btnReset.Location = new System.Drawing.Point(41, 424);
+            this.btnReset.Location = new System.Drawing.Point(740, 533);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(116, 23);
             this.btnReset.TabIndex = 23;
@@ -163,17 +167,17 @@
             // 
             // btnHapus
             // 
-            this.btnHapus.Location = new System.Drawing.Point(175, 424);
+            this.btnHapus.Location = new System.Drawing.Point(699, 562);
             this.btnHapus.Name = "btnHapus";
-            this.btnHapus.Size = new System.Drawing.Size(127, 23);
+            this.btnHapus.Size = new System.Drawing.Size(157, 23);
             this.btnHapus.TabIndex = 24;
-            this.btnHapus.Text = "🗑 HAPUS AKUN";
+            this.btnHapus.Text = "TERAPKAN STATUS";
             this.btnHapus.UseVisualStyleBackColor = true;
             this.btnHapus.Click += new System.EventHandler(this.btnHapus_Click);
             // 
             // btnSimpan
             // 
-            this.btnSimpan.Location = new System.Drawing.Point(317, 424);
+            this.btnSimpan.Location = new System.Drawing.Point(641, 591);
             this.btnSimpan.Name = "btnSimpan";
             this.btnSimpan.Size = new System.Drawing.Size(215, 23);
             this.btnSimpan.TabIndex = 25;
@@ -181,11 +185,35 @@
             this.btnSimpan.UseVisualStyleBackColor = true;
             this.btnSimpan.Click += new System.EventHandler(this.btnSimpan_Click);
             // 
+            // cmbStatus
+            // 
+            this.cmbStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbStatus.FormattingEnabled = true;
+            this.cmbStatus.Items.AddRange(new object[] {
+            "aktif",
+            "non-aktif"});
+            this.cmbStatus.Location = new System.Drawing.Point(38, 484);
+            this.cmbStatus.Name = "cmbStatus";
+            this.cmbStatus.Size = new System.Drawing.Size(121, 24);
+            this.cmbStatus.TabIndex = 26;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(38, 452);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(102, 16);
+            this.label2.TabIndex = 27;
+            this.label2.Text = "STATUS AKUN";
+            // 
             // FormManajer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(248)))), ((int)(((byte)(245)))));
             this.ClientSize = new System.Drawing.Size(882, 653);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.cmbStatus);
             this.Controls.Add(this.btnSimpan);
             this.Controls.Add(this.btnHapus);
             this.Controls.Add(this.btnReset);
@@ -223,5 +251,7 @@
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.Button btnHapus;
         private System.Windows.Forms.Button btnSimpan;
+        private System.Windows.Forms.ComboBox cmbStatus;
+        private System.Windows.Forms.Label label2;
     }
 }

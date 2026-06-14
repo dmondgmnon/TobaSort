@@ -15,90 +15,68 @@ namespace TobaSort.Views
             InitializeComponent();
             _controller = new AkunController();
 
-            // Menyembunyikan password saat form pertama kali dibuka
             if (this.Controls.Find("txtPassword", true).Length > 0)
-            {
                 txtPassword.UseSystemPasswordChar = true;
-            }
 
             MuatDataAkun();
         }
 
-        // ====================================================
-        // 1. FUNGSI TAMPIL DATA KE TABEL
-        // ====================================================
         private void MuatDataAkun()
         {
             try
             {
                 dgvAkun.DataSource = _controller.tampil_semua_akun();
+                if (dgvAkun.Columns.Contains("id_akun")) dgvAkun.Columns["id_akun"].Visible = false;
                 dgvAkun.ClearSelection();
                 BersihkanForm();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal memuat data akun: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Gagal memuat data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        // ====================================================
-        // 2. FITUR RESET FORM
-        // ====================================================
-        private void btnReset_Click(object sender, EventArgs e)
-        {
-            BersihkanForm();
         }
 
         private void BersihkanForm()
         {
             idAkunTerpilih = "";
-            if (this.Controls.Find("txtNama", true).Length > 0) txtNama.Clear();
-            if (this.Controls.Find("txtUsername", true).Length > 0) txtUsername.Clear();
-            if (this.Controls.Find("txtPassword", true).Length > 0) txtPassword.Clear();
-            if (this.Controls.Find("cmbRole", true).Length > 0) cmbRole.SelectedIndex = -1;
-
-            if (this.Controls.Find("btnSimpan", true).Length > 0) btnSimpan.Text = "💾 SIMPAN PERUBAHAN DATA";
+            txtNama.Clear();
+            txtUsername.Clear();
+            txtPassword.Clear();
+            cmbRole.SelectedIndex = -1;
+            cmbStatus.SelectedIndex = -1; // Reset agar validasi berjalan
+            btnSimpan.Text = "💾 SIMPAN PERUBAHAN DATA";
+            btnHapus.Text = "NONAKTIFKAN";
         }
 
-        // ====================================================
-        // 3. FITUR IKON MATA (LIHAT/SEMBUNYIKAN PASSWORD)
-        // ====================================================
-        private void btnMata_Click(object sender, EventArgs e)
-        {
-            if (this.Controls.Find("txtPassword", true).Length > 0)
-            {
-                txtPassword.UseSystemPasswordChar = !txtPassword.UseSystemPasswordChar;
-            }
-        }
-
-        // ====================================================
-        // 4. FITUR KLIK TABEL (MEMASUKKAN DATA KE FORM)
-        // ====================================================
         private void dgvAkun_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dgvAkun.Rows[e.RowIndex];
-
                 idAkunTerpilih = row.Cells["id_akun"].Value.ToString();
-                txtNama.Text = row.Cells["Nama"].Value.ToString();
+
+                txtNama.Text = row.Cells["Nama Lengkap"].Value.ToString();
                 txtUsername.Text = row.Cells["Username"].Value.ToString();
                 cmbRole.Text = row.Cells["Role"].Value.ToString();
-
                 txtPassword.Clear();
+
+                // Sinkronisasi status ke ComboBox
+                string statusDb = row.Cells["Status Aktif"].Value.ToString().ToLower();
+                cmbStatus.Text = (statusDb == "true" || statusDb == "1") ? "Aktif" : "Non-Aktif";
+
+                // Smart Button Logic: Tombol menyesuaikan diri
+                btnHapus.Text = (cmbStatus.Text == "Aktif") ? "NONAKTIFKAN" : "AKTIFKAN";
                 btnSimpan.Text = "💾 UPDATE DATA AKUN";
             }
         }
 
-        // ====================================================
-        // 5. FITUR SIMPAN / UPDATE DATA
-        // ====================================================
         private void btnSimpan_Click(object sender, EventArgs e)
         {
+            // Validasi hanya untuk kolom profil (tidak wajib cek ComboBox status lagi)
             if (string.IsNullOrWhiteSpace(txtNama.Text) || string.IsNullOrWhiteSpace(txtUsername.Text) ||
                 string.IsNullOrWhiteSpace(txtPassword.Text) || cmbRole.SelectedIndex == -1)
             {
-                MessageBox.Show("Mohon lengkapi semua kolom (termasuk password) sebelum menyimpan!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Mohon lengkapi Nama, Username, Password, dan Role!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -106,20 +84,23 @@ namespace TobaSort.Views
             {
                 bool sukses = false;
 
+                // Membaca teks di ComboBox (mendukung huruf kapital maupun kecil)
+                bool statusDipilih = (cmbStatus.Text == "Aktif" || cmbStatus.Text == "aktif");
+
                 if (idAkunTerpilih == "")
                 {
-                    // MODE TAMBAH BARU
+                    // Tambah baru
                     sukses = _controller.tambah_akun(txtUsername.Text.Trim(), txtPassword.Text.Trim(), txtNama.Text.Trim(), cmbRole.Text);
                 }
                 else
                 {
-                    // MODE UPDATE (EDIT)
-                    sukses = _controller.ubah_akun(Convert.ToInt32(idAkunTerpilih), txtUsername.Text.Trim(), txtPassword.Text.Trim(), txtNama.Text.Trim(), cmbRole.Text);
+                    // Update profil dengan tetap mengirimkan status terakhir yang ada di ComboBox
+                    sukses = _controller.ubah_akun(Convert.ToInt32(idAkunTerpilih), txtUsername.Text.Trim(), txtPassword.Text.Trim(), txtNama.Text.Trim(), cmbRole.Text, statusDipilih);
                 }
 
                 if (sukses)
                 {
-                    MessageBox.Show("Data akun berhasil disimpan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Data profil akun berhasil disimpan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     MuatDataAkun();
                 }
             }
@@ -129,34 +110,44 @@ namespace TobaSort.Views
             }
         }
 
-        // ====================================================
-        // 6. FITUR HAPUS DATA (SOFT DELETE)
-        // ====================================================
         private void btnHapus_Click(object sender, EventArgs e)
         {
-            if (idAkunTerpilih == "")
+            if (string.IsNullOrEmpty(idAkunTerpilih))
             {
-                MessageBox.Show("Silakan klik salah satu akun di tabel terlebih dahulu untuk dihapus!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Silakan klik salah satu akun di tabel terlebih dahulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            DialogResult dialogResult = MessageBox.Show($"Apakah Anda yakin ingin menghapus akun {txtNama.Text}?", "Konfirmasi Hapus", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dialogResult == DialogResult.Yes)
+            // PERBAIKAN LOGIKA: Gunakan teks tombol saat ini untuk menentukan aksi
+            bool akanDiaktifkan = (btnHapus.Text == "AKTIFKAN");
+            string pesanAksi = akanDiaktifkan ? "mengaktifkan kembali" : "menonaktifkan";
+
+            DialogResult dialog = MessageBox.Show($"Apakah Anda yakin ingin {pesanAksi} akun ini?", "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (dialog == DialogResult.Yes)
             {
                 try
                 {
-                    bool sukses = _controller.nonaktifkan_akun(Convert.ToInt32(idAkunTerpilih));
+                    // Kirim perintah boolean yang benar ke Jembatan (Controller)
+                    bool sukses = _controller.ubah_status_akun(Convert.ToInt32(idAkunTerpilih), akanDiaktifkan);
+
                     if (sukses)
                     {
-                        MessageBox.Show("Akun berhasil dihapus (dinonaktifkan)!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show($"Selesai! Akun berhasil di-{pesanAksi}.", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        // Refresh data di tabel dan bersihkan form
                         MuatDataAkun();
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Gagal menghapus data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Gagal mengubah status: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
+
+        private void btnReset_Click(object sender, EventArgs e) => BersihkanForm();
+
+        private void btnMata_Click(object sender, EventArgs e) => txtPassword.UseSystemPasswordChar = !txtPassword.UseSystemPasswordChar;
     }
 }
