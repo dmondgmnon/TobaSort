@@ -85,6 +85,25 @@ namespace TobaSort.Contexts
             }
         }
 
+        // FUNGSI BARU: Tambahan untuk FormManajer: Mengubah Data Akun
+        public bool UbahAkun(int id_akun, string username, string password, string nama_lengkap, string role)
+        {
+            using (var conn = BuatKoneksi())
+            {
+                conn.Open();
+                string query = "UPDATE tb_akun SET username = @user, password = @pass, nama_lengkap = @nama, role = @role WHERE id_akun = @id";
+                using (var cmd = new NpgsqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", id_akun);
+                    cmd.Parameters.AddWithValue("@user", username);
+                    cmd.Parameters.AddWithValue("@pass", password);
+                    cmd.Parameters.AddWithValue("@nama", nama_lengkap);
+                    cmd.Parameters.AddWithValue("@role", role);
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+            }
+        }
+
         // Tambahan untuk FormManajer: Menonaktifkan Akun
         public bool NonaktifkanAkun(int id_akun)
         {

@@ -68,14 +68,15 @@ namespace TobaSort.Contexts
             using (var conn = BuatKoneksi())
             {
                 conn.Open();
-                string query = @"SELECT t.id_transaksi AS ""ID Transaksi"", p.nama_petani AS ""Nama Petani"", 
-                                        a.nama_lengkap AS ""Petugas"", t.berat_kg AS ""Berat (Kg)"", 
-                                        t.total_point AS ""Total Poin"", t.id_grade AS ""Grade"", 
-                                        t.status_veto AS ""Veto?"", t.total_bayar AS ""Total Bayar (Rp)""
+                // PERBAIKAN DI SINI: Menambahkan t.waktu_transaksi AS "Tanggal"
+                string query = @"SELECT t.id_transaksi AS ""ID Transaksi"", t.waktu_transaksi AS ""Tanggal"", 
+                                        p.nama_petani AS ""Nama Petani"", a.nama_lengkap AS ""Petugas"", 
+                                        t.berat_kg AS ""Berat (Kg)"", t.total_point AS ""Total Poin"", 
+                                        t.id_grade AS ""Grade"", t.status_veto AS ""Veto?"", t.total_bayar AS ""Total Bayar (Rp)""
                                  FROM tb_transaksi t
                                  JOIN tb_petani p ON t.id_petani = p.id_petani
                                  JOIN tb_akun a ON t.id_akun_petugas = a.id_akun
-                                 ORDER BY t.id_transaksi DESC";
+                                 ORDER BY t.waktu_transaksi DESC";
                 using (var cmd = new NpgsqlCommand(query, conn)) { using (var da = new NpgsqlDataAdapter(cmd)) { da.Fill(dt); } }
             }
             return dt;
