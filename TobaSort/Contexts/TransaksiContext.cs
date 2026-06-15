@@ -18,7 +18,6 @@ namespace TobaSort.Contexts
                 {
                     try
                     {
-                        // PERBAIKAN UTAMA: Tambahkan RETURNING id_transaksi di akhir query
                         string queryTrx = @"INSERT INTO tb_transaksi 
                                            (id_transaksi, id_petani, id_akun_petugas, status_veto, total_point, 
                                             id_grade, berat_kg) 
@@ -35,15 +34,13 @@ namespace TobaSort.Contexts
                             cmdTrx.Parameters.AddWithValue("@grade", id_grade);
                             cmdTrx.Parameters.AddWithValue("@berat", berat_kg);
 
-                            // PERBAIKAN UTAMA: Tangkap ID yang baru saja digenerate oleh Trigger PostgreSQL
                             var idBaru = cmdTrx.ExecuteScalar();
                             if (idBaru != null)
                             {
-                                id_transaksi = idBaru.ToString(); // Update variabel id_transaksi dengan ID asli (TRX-...)
+                                id_transaksi = idBaru.ToString();
                             }
                         }
 
-                        // Sekarang id_transaksi sudah berisi ID asli, siap digunakan untuk tabel detail
                         if (!status_veto)
                         {
                             string queryDetail = "INSERT INTO tb_detail_penilaian (id_transaksi, id_kriteria, point_didapat) VALUES (@id_trx, @kriteria, @poin_kriteria)";
@@ -121,13 +118,17 @@ namespace TobaSort.Contexts
             using (var conn = BuatKoneksi())
             {
                 conn.Open();
+
+                // KEMBALIKAN KE BOOLEAN ASLI AGAR MUNCUL KOTAK CHECKBOX BIRU
                 string query = @"SELECT t.id_transaksi AS ""ID Transaksi"", t.berat_kg AS ""Berat (Kg)"", 
                                         t.total_point AS ""Total Poin"", t.id_grade AS ""Grade"", 
-                                        t.status_veto AS ""Kena Veto?"", t.total_bayar AS ""Total Uang (Rp)""
+                                        t.status_veto AS ""Kena Veto?"", 
+                                        t.total_bayar AS ""Total Uang (Rp)""
                                  FROM tb_transaksi t
                                  JOIN tb_petani p ON t.id_petani = p.id_petani
                                  WHERE p.id_akun = @id_akun
                                  ORDER BY t.id_transaksi DESC";
+
                 using (var cmd = new NpgsqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@id_akun", idAkunLogin);
