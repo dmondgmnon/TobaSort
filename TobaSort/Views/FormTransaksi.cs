@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Drawing;
 using System.Windows.Forms;
 using TobaSort.Models;
 using TobaSort.Controllers;
@@ -15,7 +17,6 @@ namespace TobaSort.Views
         {
             InitializeComponent();
 
-            // Inisialisasi melalui Controller (Pola Arsitektur Baru)
             this._akun_petugas = akun_aktif;
             this._petani_controller = new PetaniController();
             this._trx_controller = new TransaksiController();
@@ -41,6 +42,12 @@ namespace TobaSort.Views
 
         private void siapkan_pilihan_dropdown()
         {
+            cmbWarna.Items.Clear();
+            cmbTekstur.Items.Clear();
+            cmbAroma.Items.Clear();
+            cmbPosisi.Items.Clear();
+            cmbFisik.Items.Clear();
+
             cmbWarna.Items.AddRange(new string[] { "Keemasan (25)", "Kurang merata (15)", "Kusam (5)" });
             cmbTekstur.Items.AddRange(new string[] { "Lentur/Padat (25)", "Kurang seragam (15)", "Kaku/Rapuh (5)" });
             cmbAroma.Items.AddRange(new string[] { "Harum/Gurih (20)", "Biasa (10)", "Hambar (5)" });
@@ -62,11 +69,13 @@ namespace TobaSort.Views
             {
                 lblTotalPoin.Text = "Total Poin: 0 (Veto)";
                 lblGrade.Text = "Grade: D (Afkir)";
+                lblGrade.ForeColor = Color.Red;
             }
             else
             {
                 lblTotalPoin.Text = "Total Poin: 0";
                 lblGrade.Text = "Grade: -";
+                lblGrade.ForeColor = Color.Black;
             }
         }
 
@@ -81,10 +90,7 @@ namespace TobaSort.Views
             catch { return 0; }
         }
 
-        private void txtBerat_TextChanged(object sender, EventArgs e)
-        {
-            // No-op handler to satisfy designer event wiring. Input validation is handled elsewhere.
-        }
+        private void txtBerat_TextChanged(object sender, EventArgs e) { }
 
         private void btnHitung_Click(object sender, EventArgs e)
         {
@@ -92,6 +98,7 @@ namespace TobaSort.Views
             {
                 lblTotalPoin.Text = "Total Poin: 0";
                 lblGrade.Text = "Grade: D (Afkir)";
+                lblGrade.ForeColor = Color.Red;
                 return;
             }
 
@@ -108,8 +115,33 @@ namespace TobaSort.Views
 
             lblTotalPoin.Text = $"Total Poin: {totalPoin}";
 
-            string grade = totalPoin >= 90 ? "A+ (Super)" : totalPoin >= 75 ? "A (Premium)" :
-                           totalPoin >= 60 ? "B (Medium)" : totalPoin >= 45 ? "C (Standar)" : "D (Afkir)";
+            string grade = "";
+            if (totalPoin >= 90)
+            {
+                grade = "A+ (Super)";
+                lblGrade.ForeColor = Color.ForestGreen;
+            }
+            else if (totalPoin >= 75)
+            {
+                grade = "A (Premium)";
+                lblGrade.ForeColor = Color.ForestGreen;
+            }
+            else if (totalPoin >= 60)
+            {
+                grade = "B (Medium)";
+                lblGrade.ForeColor = Color.Blue;
+            }
+            else if (totalPoin >= 45)
+            {
+                grade = "C (Standar)";
+                lblGrade.ForeColor = Color.Orange;
+            }
+            else
+            {
+                grade = "D (Afkir)";
+                lblGrade.ForeColor = Color.Red;
+            }
+
             lblGrade.Text = $"Grade: {grade}";
         }
 
@@ -123,7 +155,8 @@ namespace TobaSort.Views
 
             try
             {
-                string id_trx = "TRX-" + DateTime.Now.ToString("yyyyMMddHHmmss");
+                // PERBAIKAN 1: String kosong karena ID diurus oleh PostgreSQL
+                string id_trx = "";
                 int id_petani = Convert.ToInt32(cmbPetani.SelectedValue);
                 bool veto = chkBerjamur.Checked || chkBauAsing.Checked || chkSangatBasah.Checked;
 
@@ -132,12 +165,25 @@ namespace TobaSort.Views
 
                 int[] poin = veto ? new int[5] : new int[] { AmbilAngkaDariTeks(cmbWarna.Text), AmbilAngkaDariTeks(cmbTekstur.Text), AmbilAngkaDariTeks(cmbAroma.Text), AmbilAngkaDariTeks(cmbPosisi.Text), AmbilAngkaDariTeks(cmbFisik.Text) };
 
-                bool sukses = _trx_controller.simpan_transaksi_penyortiran(id_trx, id_petani, this._akun_petugas.id, veto, total_poin, id_grade, decimal.Parse(txtBerat.Text), new string[] { "WARNA", "TEKSTUR", "AROMA", "POSISI", "FISIK" }, poin);
+                // PERBAIKAN 2: Menggunakan "UTUH" bukan "FISIK"
+                string[] id_kriteria = new string[] { "WARNA", "TEKSTUR", "AROMA", "POSISI", "UTUH" };
+
+                bool sukses = _trx_controller.simpan_transaksi_penyortiran(id_trx, id_petani, this._akun_petugas.id, veto, total_poin, id_grade, decimal.Parse(txtBerat.Text), id_kriteria, poin);
 
                 if (sukses)
                 {
                     MessageBox.Show("Transaksi Berhasil Disimpan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    // Reset form... (tambahkan kode reset di sini)
+
+                    // Reset form otomatis setelah sukses
+                    cmbPetani.SelectedIndex = -1;
+                    txtBerat.Clear();
+                    chkBerjamur.Checked = false;
+                    chkBauAsing.Checked = false;
+                    chkSangatBasah.Checked = false;
+                    siapkan_pilihan_dropdown();
+                    lblTotalPoin.Text = "Total Poin: 0";
+                    lblGrade.Text = "Grade: -";
+                    lblGrade.ForeColor = Color.Black;
                 }
             }
             catch (Exception ex)
@@ -145,5 +191,9 @@ namespace TobaSort.Views
                 MessageBox.Show("Sistem Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void pnlRingkasan_Paint(object sender, PaintEventArgs e) { }
+
+        private void cmbAroma_SelectedIndexChanged(object sender, EventArgs e) { }
     }
 }

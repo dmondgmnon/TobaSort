@@ -18,10 +18,12 @@ namespace TobaSort.Contexts
                 {
                     try
                     {
+                        // PERBAIKAN UTAMA: Tambahkan RETURNING id_transaksi di akhir query
                         string queryTrx = @"INSERT INTO tb_transaksi 
                                            (id_transaksi, id_petani, id_akun_petugas, status_veto, total_point, 
-                                            id_grade, berat_kg, harga_per_kg_saat_transaksi, total_bayar, status_transaksi) 
-                                            VALUES (@id_trx, @petani, @petugas, @veto, @poin, @grade, @berat, 0, 0, 'Selesai')";
+                                            id_grade, berat_kg) 
+                                            VALUES (@id_trx, @petani, @petugas, @veto, @poin, @grade, @berat)
+                                            RETURNING id_transaksi";
 
                         using (var cmdTrx = new NpgsqlCommand(queryTrx, conn, transaction))
                         {
@@ -32,9 +34,16 @@ namespace TobaSort.Contexts
                             cmdTrx.Parameters.AddWithValue("@poin", total_point);
                             cmdTrx.Parameters.AddWithValue("@grade", id_grade);
                             cmdTrx.Parameters.AddWithValue("@berat", berat_kg);
-                            cmdTrx.ExecuteNonQuery();
+
+                            // PERBAIKAN UTAMA: Tangkap ID yang baru saja digenerate oleh Trigger PostgreSQL
+                            var idBaru = cmdTrx.ExecuteScalar();
+                            if (idBaru != null)
+                            {
+                                id_transaksi = idBaru.ToString(); // Update variabel id_transaksi dengan ID asli (TRX-...)
+                            }
                         }
 
+                        // Sekarang id_transaksi sudah berisi ID asli, siap digunakan untuk tabel detail
                         if (!status_veto)
                         {
                             string queryDetail = "INSERT INTO tb_detail_penilaian (id_transaksi, id_kriteria, point_didapat) VALUES (@id_trx, @kriteria, @poin_kriteria)";
@@ -56,7 +65,7 @@ namespace TobaSort.Contexts
                     catch (Exception ex)
                     {
                         transaction.Rollback();
-                        throw new Exception("Gagal menyimpan transaksi: " + ex.Message);
+                        throw new Exception(ex.Message);
                     }
                 }
             }
@@ -68,7 +77,6 @@ namespace TobaSort.Contexts
             using (var conn = BuatKoneksi())
             {
                 conn.Open();
-                // PERBAIKAN DI SINI: Menambahkan t.waktu_transaksi AS "Tanggal"
                 string query = @"SELECT t.id_transaksi AS ""ID Transaksi"", t.waktu_transaksi AS ""Tanggal"", 
                                         p.nama_petani AS ""Nama Petani"", a.nama_lengkap AS ""Petugas"", 
                                         t.berat_kg AS ""Berat (Kg)"", t.total_point AS ""Total Poin"", 
