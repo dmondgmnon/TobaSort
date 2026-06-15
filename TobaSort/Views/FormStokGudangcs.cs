@@ -24,6 +24,9 @@ namespace TobaSort.Views
             {
                 // Memanggil method dari Controller
                 dgvStok.DataSource = _controller.tampil_stok_gudang();
+
+                // Tambahan agar kolom otomatis melar memenuhi ruang
+                dgvStok.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             }
             catch (Exception ex)
             {
@@ -33,7 +36,11 @@ namespace TobaSort.Views
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
+            // Memuat ulang data dari database
             muat_stok();
+
+            // Menampilkan popup notifikasi
+            MessageBox.Show("Data berhasil di-refresh!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

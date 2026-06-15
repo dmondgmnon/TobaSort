@@ -332,6 +332,7 @@
             this.btnSimpanSemua.TabIndex = 11;
             this.btnSimpanSemua.Text = "SIMPAN SEMUA PERUBAHAN";
             this.btnSimpanSemua.UseVisualStyleBackColor = false;
+            this.btnSimpanSemua.Click += new System.EventHandler(this.btnSimpanSemua_Click);
             // 
             // label7
             // 

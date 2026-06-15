@@ -37,9 +37,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(12, 26);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(211, 16);
+            this.label1.Size = new System.Drawing.Size(283, 23);
             this.label1.TabIndex = 0;
             this.label1.Text = "Informasi Stok Gudang Tembakau";
             // 
@@ -47,20 +48,24 @@
             // 
             this.dgvStok.AllowUserToAddRows = false;
             this.dgvStok.AllowUserToDeleteRows = false;
+            this.dgvStok.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvStok.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(248)))), ((int)(((byte)(245)))));
             this.dgvStok.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvStok.Location = new System.Drawing.Point(15, 46);
+            this.dgvStok.EnableHeadersVisualStyles = false;
+            this.dgvStok.Location = new System.Drawing.Point(16, 72);
             this.dgvStok.Name = "dgvStok";
             this.dgvStok.ReadOnly = true;
             this.dgvStok.RowHeadersWidth = 51;
             this.dgvStok.RowTemplate.Height = 24;
-            this.dgvStok.Size = new System.Drawing.Size(622, 150);
+            this.dgvStok.Size = new System.Drawing.Size(954, 196);
             this.dgvStok.TabIndex = 1;
             // 
             // btnRefresh
             // 
-            this.btnRefresh.Location = new System.Drawing.Point(508, 340);
+            this.btnRefresh.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRefresh.Location = new System.Drawing.Point(834, 274);
             this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(75, 23);
+            this.btnRefresh.Size = new System.Drawing.Size(136, 53);
             this.btnRefresh.TabIndex = 2;
             this.btnRefresh.Text = "Refresh";
             this.btnRefresh.UseVisualStyleBackColor = true;
@@ -70,7 +75,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(248)))), ((int)(((byte)(245)))));
+            this.ClientSize = new System.Drawing.Size(982, 653);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.dgvStok);
             this.Controls.Add(this.label1);
