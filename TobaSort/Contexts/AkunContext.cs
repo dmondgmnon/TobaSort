@@ -50,7 +50,6 @@ namespace TobaSort.Contexts
             using (var conn = BuatKoneksi())
             {
                 conn.Open();
-                // FIX: Menambahkan kolom password dan menyesuaikan alias agar persis dengan yang dicari oleh event CellClick di FormManajer
                 string query = @"SELECT id_akun, nama_lengkap AS ""Nama Lengkap"", username AS ""Username"", 
                                         password AS ""Password"", role AS ""Role"", is_aktif AS ""Status Aktif"" 
                                  FROM tb_akun 
@@ -121,7 +120,7 @@ namespace TobaSort.Contexts
             }
         }
 
-        // (Fungsi lama tetap dipertahankan untuk jaga-jaga jika ada kode lain yang masih memanggilnya)
+        // (Fungsi NONAKTIFKAN AKUN) Alternatif: Langsung set is_aktif = false 
         public bool NonaktifkanAkun(int id_akun)
         {
             using (var conn = BuatKoneksi())

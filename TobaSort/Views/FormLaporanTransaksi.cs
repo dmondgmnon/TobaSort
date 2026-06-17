@@ -74,7 +74,7 @@ namespace TobaSort.Views
 
             try
             {
-                // PERBAIKAN FINAL: Gunakan format AMERIKA (Bulan/Hari/Tahun) khusus untuk RowFilter
+                // Gunakan format AMERIKA (Bulan/Hari/Tahun) khusus untuk RowFilter
                 string tglAwal = dtpAwal.Value.ToString("MM/dd/yyyy");
                 string tglAkhir = dtpAkhir.Value.ToString("MM/dd/yyyy");
 

@@ -118,8 +118,6 @@ namespace TobaSort.Contexts
             using (var conn = BuatKoneksi())
             {
                 conn.Open();
-
-                // KEMBALIKAN KE BOOLEAN ASLI AGAR MUNCUL KOTAK CHECKBOX BIRU
                 string query = @"SELECT t.id_transaksi AS ""ID Transaksi"", t.berat_kg AS ""Berat (Kg)"", 
                                         t.total_point AS ""Total Poin"", t.id_grade AS ""Grade"", 
                                         t.status_veto AS ""Kena Veto?"", 

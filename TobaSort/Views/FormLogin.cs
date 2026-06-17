@@ -12,7 +12,6 @@ namespace TobaSort.Views
         public FormLogin()
         {
             InitializeComponent();
-            // Penamaan seragam dengan form lain
             _controller = new AuthController();
         }
 
@@ -29,7 +28,6 @@ namespace TobaSort.Views
 
             try
             {
-                // Memanggil fungsi dari controller
                 Akun akun_login = _controller.login(username, password);
 
                 if (akun_login != null)

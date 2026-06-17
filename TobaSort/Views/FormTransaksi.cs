@@ -17,6 +17,7 @@ namespace TobaSort.Views
         {
             InitializeComponent();
 
+            // Inisialisasi melalui Controller (Pola Arsitektur Baru)
             this._akun_petugas = akun_aktif;
             this._petani_controller = new PetaniController();
             this._trx_controller = new TransaksiController();

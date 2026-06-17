@@ -92,8 +92,6 @@ namespace TobaSort.Views
                 e.CellStyle.Font = new Font(dgvRiwayat.Font, FontStyle.Bold);
             }
 
-            // CATATAN: Kolom "Kena Veto?" sengaja dihilangkan dari sini agar Windows 
-            // otomatis merendernya sebagai CheckBox asli!
         }
 
         private void txtCari_TextChanged(object sender, EventArgs e)

@@ -26,10 +26,6 @@ namespace TobaSort.Controllers
             return _context.GetRiwayat();
         }
 
-        public DataTable tampil_riwayat_berdasarkan_tanggal(DateTime tgl_awal, DateTime tgl_akhir)
-        {
-            return _context.GetRiwayat(tgl_awal, tgl_akhir);
-        }
 
         public DataTable tampil_riwayat_petani(int id_akun_login)
         {

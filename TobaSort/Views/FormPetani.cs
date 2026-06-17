@@ -48,16 +48,15 @@ namespace TobaSort.Views
             txtNoTelp.Clear();
             txtUsername.Clear();
             txtPassword.Clear();
-            cmbStatus.SelectedIndex = -1; // Reset ComboBox
+            cmbStatus.SelectedIndex = -1; 
             _id_petani_terpilih = 0;
 
-            // Kembalikan teks tombol ke awal
+
             btnNonaktif.Text = "NONAKTIFKAN";
         }
 
-        // ====================================================
+
         // TOMBOL TAMBAH (Fungsi Insert Data Baru)
-        // ====================================================
         private void btnTambah_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtNama.Text) || string.IsNullOrWhiteSpace(txtUsername.Text) || string.IsNullOrWhiteSpace(txtPassword.Text))
@@ -81,9 +80,7 @@ namespace TobaSort.Views
             }
         }
 
-        // ====================================================
-        // KLIK TABEL (Sinkronisasi ke Form & ComboBox)
-        // ====================================================
+
         private void dgvPetani_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -96,9 +93,8 @@ namespace TobaSort.Views
                 txtNoTelp.Text = row.Cells["No. Telepon"].Value.ToString();
                 txtUsername.Text = row.Cells["Username"].Value.ToString();
 
-                txtPassword.Clear(); // Kosongkan password demi keamanan
+                txtPassword.Clear(); 
 
-                // PERBAIKAN: Sinkronisasi status menggunakan SelectedIndex yang lebih aman
                 string statusDb = row.Cells["Status Aktif"].Value.ToString().ToLower();
                 bool isAktif = (statusDb == "true" || statusDb == "1");
 
@@ -115,9 +111,7 @@ namespace TobaSort.Views
             }
         }
 
-        // ====================================================
         // TOMBOL SIMPAN (Fungsi Update/Edit Data)
-        // ====================================================
         private void btnSimpan_Click(object sender, EventArgs e)
         {
             if (_id_petani_terpilih == 0)
@@ -134,7 +128,7 @@ namespace TobaSort.Views
 
             try
             {
-                // PERBAIKAN: Membaca pilihan dari cmbStatus menggunakan index
+
                 bool statusDipilih = (cmbStatus.SelectedIndex == 0);
 
                 bool sukses = _controller.edit_petani(
@@ -154,9 +148,7 @@ namespace TobaSort.Views
             }
         }
 
-        // ====================================================
-        // TOMBOL NONAKTIFKAN (Fungsi Smart Toggle Status)
-        // ====================================================
+        // TOMBOL NONAKTIFKAN 
         private void btnNonaktif_Click(object sender, EventArgs e)
         {
             if (_id_petani_terpilih == 0)
@@ -165,7 +157,6 @@ namespace TobaSort.Views
                 return;
             }
 
-            // Gunakan teks tombol saat ini untuk menentukan aksi
             bool akanDiaktifkan = (btnNonaktif.Text == "AKTIFKAN");
             string pesanAksi = akanDiaktifkan ? "mengaktifkan kembali" : "menonaktifkan";
 
@@ -190,9 +181,7 @@ namespace TobaSort.Views
             }
         }
 
-        // ====================================================
         // TOMBOL BERSIHKAN & LAINNYA
-        // ====================================================
         private void btnBersihkan_Click(object sender, EventArgs e) => bersihkan_form();
 
         private void btnMata_Click(object sender, EventArgs e)
@@ -205,9 +194,6 @@ namespace TobaSort.Views
 
         private void FormPetani_Load(object sender, EventArgs e) { }
 
-        // ====================================================
-        // FITUR FORMATTING: Menyulap Tampilan Status di Tabel
-        // ====================================================
         private void dgvPetani_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex >= 0 && e.Value != null)

@@ -27,9 +27,8 @@ namespace TobaSort.Controllers
             return _context.EditPetani(id_petani, nama_petani, alamat, no_telp, username, password, status_aktif);
         }
 
-        // ====================================================
-        // FUNGSI BARU: Untuk fitur Smart Toggle (Aktif/Nonaktif)
-        // ====================================================
+        // Untuk fitur Smart Toggle (Aktif/Nonaktif)
+        
         public bool ubah_status_petani(int id_petani, bool status_baru)
         {
             return _context.UbahStatusPetani(id_petani, status_baru);

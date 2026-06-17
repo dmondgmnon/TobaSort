@@ -16,7 +16,6 @@ namespace TobaSort.Contexts
             using (var conn = BuatKoneksi())
             {
                 conn.Open();
-                // PERBAIKAN: Menambahkan CAST agar boolean menjadi teks (menghindari error Checkbox)
                 string query = @"
                     SELECT 
                         p.id_petani, 

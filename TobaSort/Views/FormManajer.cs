@@ -44,7 +44,7 @@ namespace TobaSort.Views
             txtPassword.Clear();
             cmbRole.SelectedIndex = -1;
             cmbStatus.SelectedIndex = -1;
-            btnSimpan.Text = "💾 SIMPAN PERUBAHAN DATA";
+            btnSimpan.Text = "SIMPAN PERUBAHAN DATA";
             btnHapus.Text = "NONAKTIFKAN";
         }
 
@@ -60,22 +60,21 @@ namespace TobaSort.Views
                 cmbRole.Text = row.Cells["Role"].Value.ToString();
                 txtPassword.Clear();
 
-                // PERBAIKAN: Baca status menggunakan Index agar kebal terhadap error teks
                 string statusDb = row.Cells["Status Aktif"].Value.ToString().ToLower();
                 bool isAktif = (statusDb == "true" || statusDb == "1");
 
                 if (isAktif)
                 {
-                    cmbStatus.SelectedIndex = 0; // Pilih baris ke-1 (Aktif)
-                    btnHapus.Text = "NONAKTIFKAN"; // Siapkan tombol untuk mematikan
+                    cmbStatus.SelectedIndex = 0;
+                    btnHapus.Text = "NONAKTIFKAN";
                 }
                 else
                 {
-                    cmbStatus.SelectedIndex = 1; // Pilih baris ke-2 (Non-Aktif)
-                    btnHapus.Text = "AKTIFKAN";    // Siapkan tombol untuk menghidupkan
+                    cmbStatus.SelectedIndex = 1;
+                    btnHapus.Text = "AKTIFKAN"; 
                 }
 
-                btnSimpan.Text = "💾 UPDATE DATA AKUN";
+                btnSimpan.Text = " UPDATE DATA AKUN";
             }
         }
 
@@ -92,7 +91,6 @@ namespace TobaSort.Views
             {
                 bool sukses = false;
 
-                // PERBAIKAN: Cek status menggunakan Index (0 = Aktif)
                 bool statusDipilih = (cmbStatus.SelectedIndex == 0);
 
                 if (idAkunTerpilih == "")
@@ -124,7 +122,6 @@ namespace TobaSort.Views
                 return;
             }
 
-            // Baca aksi dari teks tombol saat ini
             bool akanDiaktifkan = (btnHapus.Text == "AKTIFKAN");
             string pesanAksi = akanDiaktifkan ? "mengaktifkan kembali" : "menonaktifkan";
 
@@ -134,7 +131,6 @@ namespace TobaSort.Views
             {
                 try
                 {
-                    // Eksekusi perubahan
                     bool sukses = _controller.ubah_status_akun(Convert.ToInt32(idAkunTerpilih), akanDiaktifkan);
 
                     if (sukses)

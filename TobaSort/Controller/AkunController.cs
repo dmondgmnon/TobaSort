@@ -37,7 +37,7 @@ namespace TobaSort.Controllers
             return _context.UbahAkun(id_akun, username, password, nama_lengkap, role, is_aktif);
         }
 
-        // FUNGSI BARU: Meneruskan perintah ubah status akun (Aktif/Nonaktif) ke Context
+        // Meneruskan perintah ubah status akun (Aktif/Nonaktif) ke Context
         public bool ubah_status_akun(int id_akun, bool status_baru)
         {
             return _context.UbahStatusAkun(id_akun, status_baru);
